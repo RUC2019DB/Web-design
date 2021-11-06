@@ -1,4 +1,13 @@
 1.首页
+	背景
+	顶端 buttons 注册 登录 购物车
+	搜索框 button:搜索
+	分类标签
+		<ul>
+		<li>Coffee</li>
+		<li>Milk</li>
+		</ul>
+	广告
 2.登录
 3.注册
 4.搜索结果页面
