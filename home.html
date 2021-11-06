@@ -1,47 +1,56 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <style>
+    <head>
+        <style>
+            body 
+            {
+                background-image:url('133813dbm9fh0fu0n47040.jpg');
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+            }
+            .topButton
+            {
+                z-index:1;
+            }
+        </style>
+    </head>
 
-    </style>
-</head>
+    <body>
+        <h1 align="center">商店</h1>
+        <hr>
 
-    <body  background="D:\数据库\Web-design\133813dbm9fh0fu0n47040.jpg" style='background-size: 100%;background-attachment: fixed'>
-    <h1>商店</h1>
-    <hr>
-        <div align='left' style="position:relative;top: 10px"  > 
-            <button type='button'>登录</button> 
-            <button type="button">注册</button>
+        <div class="topButton" style="position:relative;float:left;display:inline">
+            <button onclick="window.location.href='signIn.html'">登录</button>
+            <button onclick="window.location.href='register.html'">注册</button>
         </div>
-        <div align='right' style="position:relative;top: -20px">
-            <button type="button">购物车</button> 
+
+        <div class="topButton" style="position:relative;float:right;display:inline">
+            <button onclick="window.location.href='shoppingCar.html'">购物车</button>
         </div>
+        <br>
         <hr>
         <!-- h1是水平线 -->
-        <div  style="display: inline;position:relative">
+        <div style="display:inline;position:relative">
             
             <form style="display: inline">
                 商品搜索:<input type='text' name='name'>
             </form>
-            
-            <button type="button">搜索</button> 
-            
+            <button onclick="window.location.href='searchResult.html'">搜索</button> 
         </div>
 
-        
-            <p id="demo">一个<br>段落</p>
-            <font size="6">这是6号字体文本</font>
-            <button type="button" onclick="myFunction()">尝试一下</button>
-                <script>
-                function myFunction()
-                {
-                    document.getElementById("demo").innerHTML="我的第一个 JavaScript 函数";
-                }
-                </script>
+        <p id="demo">一个<br>段落</p>
+        <font size="6">这是6号字体文本</font>
+        <button type="button" onclick="myFunction()">尝试一下</button>
+        <script>
+            function myFunction()
+            {
+                document.getElementById("demo").innerHTML="我的第一个 JavaScript 函数";
+            }
+        </script>
 
-            <a href=".\web1\htmltry2.html"target="_blank">next</a>
         <hr>
-    <img loading="lazy" src="D:\数据库\Web-design\1aa7f7abc05ce105b9d5676ef513be0.png" />
+    <img loading="lazy" src="1aa7f7abc05ce105b9d5676ef513be0.png" />
 
     </body>
 </html>
