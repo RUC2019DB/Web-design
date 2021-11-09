@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script type="text/javascript" src="AccountList.js"></script>
         <script>
             function hash(str)
             {
@@ -7,7 +8,6 @@
                 var a = 63689;  
                 var hash = 0;
                 var modKey = 999999999755591
-
                 for(var i = 0; i<str.length; i++)  
                 {  
                     hash = (hash * a + str.charAt(i).charCodeAt()) % modKey;
@@ -17,20 +17,22 @@
             }
             function checkAccount()
             {
-                var username = document.forms["signIn"]['uername'].value
+                var username = document.forms["signIn"]['username'].value
                 var password = document.forms["signIn"]['password'].value
                 var hashKey = hash(password)
-                if (username=='ysy'&hashKey==hash('123456'))
+                var flag = 0
+                for (var i=0;i<AccountList.length;i++)
                 {
-                    document.getElementById("checkResult").innerHTML="禹顺尧登入"
+                    if ((username==AccountList[i].username)&(hashKey==AccountList[i].password))
+                    {
+                        document.getElementById("checkResult").innerHTML = "登录成功"
+                        flag = 1
+                        break
+                    }
                 }
-                else if (username=='wh'&hashKey==hash('456789'))
+                if (flag==0)
                 {
-                    document.getElementById("checkResult").innerHTML="万涵登入"
-                }
-                else
-                {
-                    document.getElementById("checkResult").innerHTML="登录失败"
+                    document.getElementById("checkResult").innerHTML = "用户名或密码不正确"
                 }
             }
         </script>
@@ -39,7 +41,7 @@
         <h1 align="center">登录</h1>
         <div>
             <form name='signIn' style="display: inline">
-                用户名:<input type='text' name='uername'><br>
+                用户名:<input type='text' name='username'><br>
                 密码:<input type='text' name='password'><br>
             </form>
         </div>

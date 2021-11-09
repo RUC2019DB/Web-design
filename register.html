@@ -1,13 +1,26 @@
 <html>
+    <head>
+        <script type="text/javascript" src="AccountList.js"></script>
+        <script>
+            function register()
+            {
+                let username = document.forms["registerForm"]["username"].value
+                let password = document.forms["registerForm"]["password"].value
+                let phone = document.forms["registerForm"]["phone"].value
+                let email = document.forms["registerForm"]["email"].value
+            }
+        </script>
+    </head>
     <body>
         <h1 align="center">注册用户</h1>
         <div>
-            <form>
-                用户名:<input type='text' name='uername'><br>
+            <form name="registerForm">
+                用户名:<input type='text' name='username'><br>
                 密码:<input type='text' name='password'><br>
                 手机号码:<input type='text' name='phone'><br>
+                电子邮箱:<input type='text' name='email'><br>
             </form>
         </div>
-        <button type='button'>注册</button>
+        <button type='button' onclick=register()>注册</button>
     </body>
 </html>
