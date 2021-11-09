@@ -1,12 +1,49 @@
 <html>
+    <head>
+        <script>
+            function hash(str)
+            {
+                var b = 378551;  
+                var a = 63689;  
+                var hash = 0;
+                var modKey = 999999999755591
+
+                for(var i = 0; i<str.length; i++)  
+                {  
+                    hash = (hash * a + str.charAt(i).charCodeAt()) % modKey;
+                    a  = (a * b) % modKey
+                }  
+                return hash;
+            }
+            function checkAccount()
+            {
+                var username = document.forms["signIn"]['uername'].value
+                var password = document.forms["signIn"]['password'].value
+                var hashKey = hash(password)
+                if (username=='ysy'&hashKey==hash('123456'))
+                {
+                    document.getElementById("checkResult").innerHTML="禹顺尧登入"
+                }
+                else if (username=='wh'&hashKey==hash('456789'))
+                {
+                    document.getElementById("checkResult").innerHTML="万涵登入"
+                }
+                else
+                {
+                    document.getElementById("checkResult").innerHTML="登录失败"
+                }
+            }
+        </script>
+    </head>
     <body>
         <h1 align="center">登录</h1>
         <div>
-            <form style="display: inline">
+            <form name='signIn' style="display: inline">
                 用户名:<input type='text' name='uername'><br>
                 密码:<input type='text' name='password'><br>
             </form>
         </div>
-        <button type='button'>登录</button>
+        <button type='button' onclick=checkAccount()>登录</button>
+        <p id='checkResult'></p>
     </body>
 </html>
