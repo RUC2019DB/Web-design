@@ -2,6 +2,30 @@
 <html>
     <head>
         <link rel="shortcut icon" href="logo_rhodes.png">
+        <script src="localAccountStorage.js"></script>
+        <script>
+            function signout()
+            {
+                deleteAccount()
+                document.getElementById("account").innerHTML = "未登录"
+            }
+            function checkAccount()
+            {
+                var username = getAccount()
+                if (username==null) 
+                {
+                    document.getElementById("signin").innerHTML = "登录"
+                    document.getElementById("account").innerHTML = "未登录"
+                }
+                else 
+                {
+                    document.getElementById("signin").innerHTML = "登出/切换账号"
+                    document.getElementById("account").innerHTML = username
+                }
+                checkExpire()
+            }
+            setInterval(checkAccount,100)
+        </script>
         <style>
             body 
             {
@@ -26,7 +50,7 @@
         <hr>
 
         <div class="topButton" style="position:relative;float:left;display:inline">
-            <button onclick="window.location.href='signIn.html'">登录</button>
+            <button id="signin" onclick="window.location.href='signIn.html'">登录</button>
             <button onclick="window.location.href='register.html'">注册</button>
         </div>
 
@@ -77,7 +101,6 @@
     <div class="img1" >
         <img  src="1aa7f7abc05ce105b9d5676ef513be0.png" />
     </div>
-
-   
+    <p id='account'></p>
     </body>
 </html>
