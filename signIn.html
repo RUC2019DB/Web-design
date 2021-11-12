@@ -1,20 +1,9 @@
 <html>
     <head>
-        <script type="text/javascript" src="AccountList.js"></script>
+        <script src="AccountList.js"></script>
+        <script src="hash.js"></script>
+        <script src="localAccountStorage.js"></script>
         <script>
-            function hash(str)
-            {
-                var b = 378551;  
-                var a = 63689;  
-                var hash = 0;
-                var modKey = 999999999755591
-                for(var i = 0; i<str.length; i++)  
-                {  
-                    hash = (hash * a + str.charAt(i).charCodeAt()) % modKey;
-                    a  = (a * b) % modKey
-                }  
-                return hash;
-            }
             function checkAccount()
             {
                 var username = document.forms["signIn"]['username'].value
@@ -25,7 +14,8 @@
                 {
                     if ((username==AccountList[i].username)&(hashKey==AccountList[i].password))
                     {
-                        document.getElementById("checkResult").innerHTML = "登录成功"
+                        setAccount(username)
+                        window.open("home.html","_self")
                         flag = 1
                         break
                     }
@@ -38,6 +28,7 @@
         </script>
     </head>
     <body>
+        <script>deleteAccount()</script>
         <h1 align="center">登录</h1>
         <div>
             <form name='signIn' style="display: inline">
