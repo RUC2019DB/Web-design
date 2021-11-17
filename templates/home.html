@@ -102,5 +102,11 @@
         <img  src="1aa7f7abc05ce105b9d5676ef513be0.png" />
     </div>
     <p id='account'></p>
+    {% for foo in my_list %}
+        {% if foo>3 %}
+            {{foo}}<br>
+        {% endif %}
+    {% endfor %}
+    
     </body>
 </html>
