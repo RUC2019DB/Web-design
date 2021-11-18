@@ -8,9 +8,6 @@ from dbQuery import *
 app = Flask(__name__)
 app.secret_key = "sdfha1561"#数据加密密钥
 
-#数据库
-db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='eStore')
-
 @app.route('/',methods=['GET','POST'])
 def home():
     my_list = [1,2,3,4,5]
@@ -52,10 +49,10 @@ def register():
     if register_Form.validate_on_submit()==False:
         flash("注册信息有误")
     else:
-        if db.checkPassword(username,password):
-            flash("登录成功")
+        if db.register(username,password):
+            flash("注册成功")
         else:
-            flash("用户名或密码不正确")
+            flash("注册信息有误")
     return render_template("register.html",register_Form=register_Form)
     
 
@@ -64,4 +61,9 @@ def get_order_id(order_id):
     return 'order_id = #%s'%order_id
 
 if __name__ == '__main__':
-    app.run()
+    db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库
+    if db.ifconn:
+        print("数据库连接成功")
+        app.run()
+    else:
+        print("数据库连接失败")
