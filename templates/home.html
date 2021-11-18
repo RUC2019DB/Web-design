@@ -50,8 +50,12 @@
         <hr>
 
         <div class="topButton" style="position:relative;float:left;display:inline">
-            <button id="signin" onclick="window.location.href='signIn.html'">登录</button>
-            <button onclick="window.location.href='register.html'">注册</button>
+            <a id="signIn" href="{{ url_for('signIn') }}">
+                <button>登录</button>
+            </a>
+            <a id="register" href="{{ url_for('register') }}">
+                <button>注册</button>
+            </a>
         </div>
 
         <div class="topButton" style="position:relative;float:right;display:inline">
@@ -68,45 +72,34 @@
             
             <button onclick="window.location.href='searchResult.html'">搜索</button> 
         </div>
-         <!-- h1是水平线 
-        <p id="demo">一个<br>段落</p>
-        <font size="6">这是6号字体文本</font>
-        <button type="button" onclick="myFunction()">尝试一下</button>
-        <script>
-            function myFunction()
-            {
-                document.getElementById("demo").innerHTML="我的第一个 JavaScript 函数";
-            }
-        </script>
--->
-    <div  data-spm-ab="main">
-        <ul class="service-bd" role="menubar">
-        
-            <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-            <i aria-hidden="true" >武器</i>
-                <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-            </li> <!-- 这里面的链接需要改一下-->
-            <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-            <i aria-hidden="true" >防具</i>
-                <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-            </li> <!-- 这里面的链接需要改一下-->
-            <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-            <i aria-hidden="true" >药品及食物</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-            </li> <!-- 这里面的链接需要改一下-->
-        </ul>
-    
-    </div>
 
-    <div class="img1" >
-        <img  src="1aa7f7abc05ce105b9d5676ef513be0.png" />
-    </div>
-    <p id='account'></p>
-    {% for foo in my_list %}
-        {% if foo>3 %}
-            {{foo}}<br>
-        {% endif %}
-    {% endfor %}
+        <div  data-spm-ab="main">
+            <ul class="service-bd" role="menubar">
+            
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >武器</i>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> <!-- 这里面的链接需要改一下-->
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >防具</i>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> <!-- 这里面的链接需要改一下-->
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >药品及食物</i>
+                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> <!-- 这里面的链接需要改一下-->
+            </ul>
+        </div>
+
+        <div class="img1" >
+            <img src="{{ url_for('static', filename='1aa7f7abc05ce105b9d5676ef513be0.png') }}"/>
+        </div>
+        <p id='account'></p>
+        {% for foo in my_list %}
+            {% if foo>3 %}
+                {{foo}}<br>
+            {% endif %}
+        {% endfor %}
     
     </body>
 </html>

@@ -1,26 +1,19 @@
 <html>
     <head>
-        <script src="./js/AccountList.js"></script>
-        <script>
-            function register()
-            {
-                let username = document.forms["registerForm"]["username"].value
-                let password = document.forms["registerForm"]["password"].value
-                let phone = document.forms["registerForm"]["phone"].value
-                let email = document.forms["registerForm"]["email"].value
-            }
-        </script>
     </head>
     <body>
         <h1 align="center">注册用户</h1>
         <div>
-            <form name="registerForm">
-                用户名:<input type='text' name='username'><br>
-                密码:<input type='text' name='password'><br>
-                手机号码:<input type='text' name='phone'><br>
-                电子邮箱:<input type='text' name='email'><br>
+            <form method="post">
+                {{register_Form.csrf_token()}}
+                {{register_Form.username.label}}{{register_Form.username}}<br>
+                {{register_Form.password1.label}}{{register_Form.password1}}<br>
+                {{register_Form.password2.label}}{{register_Form.password2}}<br>
+                {{register_Form.submit}}<br>
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
             </form>
         </div>
-        <button type='button' onclick=register()>注册</button>
     </body>
 </html>

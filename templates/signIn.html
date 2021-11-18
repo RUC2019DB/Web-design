@@ -1,42 +1,20 @@
 <html>
     <head>
-        <script src="./js/AccountList.js"></script>
-        <script src="./js/hash.js"></script>
-        <script src="./js/localAccountStorage.js"></script>
-        <script>
-            function checkAccount()
-            {
-                var username = document.forms["signIn"]['username'].value
-                var password = document.forms["signIn"]['password'].value
-                var hashKey = hash(password)
-                var flag = 0
-                for (var i=0;i<AccountList.length;i++)
-                {
-                    if ((username==AccountList[i].username)&(hashKey==AccountList[i].password))
-                    {
-                        setAccount(username)
-                        window.open("home.html","_self")
-                        flag = 1
-                        break
-                    }
-                }
-                if (flag==0)
-                {
-                    document.getElementById("checkResult").innerHTML = "用户名或密码不正确"
-                }
-            }
-        </script>
+        <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
     </head>
     <body>
-        <script>deleteAccount()</script>
         <h1 align="center">登录</h1>
         <div>
-            <form name='signIn' style="display: inline">
-                用户名:<input type='text' name='username'><br>
-                密码:<input type='text' name='password'><br>
+            <form method="post">
+                {{signIn_form.csrf_token()}}
+                {{signIn_form.username.label}}{{signIn_form.username}}<br>
+                {{signIn_form.password.label}}{{signIn_form.password}}<br>
+                {{signIn_form.submit}}<br>
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
             </form>
         </div>
-        <button type='button' onclick=checkAccount()>登录</button>
         <p id='checkResult'></p>
     </body>
 </html>
