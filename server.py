@@ -1,8 +1,9 @@
-from flask import Flask,render_template,request,flash
-from flask_wtf import FlaskForm
+from flask import Flask,render_template,request,flash,redirect,session
+from flask.helpers import url_for
 from wtforms import StringField,PasswordField,SubmitField
 from wtforms.validators import DataRequired,EqualTo
 from dbQuery import *
+from Form import *
 
 #服务器
 app = Flask(__name__)
@@ -10,35 +11,31 @@ app.secret_key = "sdfha1561"#数据加密密钥
 
 @app.route('/',methods=['GET','POST'])
 def home():
-    my_list = [1,2,3,4,5]
-    return render_template('home.html',my_list=my_list)
+    search_Form = searchForm()
+    return render_template('home.html',username=session.get('username'),search_Form=search_Form)
 
-
-class signInForm(FlaskForm):
-    username = StringField('用户名:',validators=[DataRequired()])
-    password = PasswordField('密码:',validators=[DataRequired()])
-    submit = SubmitField('登录')
 
 @app.route("/signIn",methods=["GET","POST"])
 def signIn():
+    try:
+        session.pop("username")
+    except:
+        pass
     signIn_form = signInForm()
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-    if signIn_form.validate_on_submit()==False:
-        flash("用户名或密码不能为空")
-    else:
-        if db.checkPassword(username,password):
-            flash("登录成功")
+        if signIn_form.validate_on_submit()==False:
+            flash("用户名或密码不能为空")
         else:
-            flash("用户名或密码不正确")
+            if db.checkPassword(username,password):
+                session["username"] = username
+                return redirect(url_for('home'))
+            else:
+                flash("用户名或密码不正确")
+
     return render_template("signIn.html",signIn_form=signIn_form)
 
-class registerForm(FlaskForm):
-    username = StringField('用户名:',validators=[DataRequired()])
-    password1 = PasswordField('密码:',validators=[DataRequired()])
-    password2 = PasswordField('确认密码:',validators=[DataRequired(),EqualTo('password1')])
-    submit = SubmitField('登录')
 
 @app.route("/register",methods=["GET","POST"])
 def register():
@@ -46,19 +43,28 @@ def register():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password1")
-    if register_Form.validate_on_submit()==False:
-        flash("注册信息有误")
-    else:
-        if db.register(username,password):
-            flash("注册成功")
-        else:
+        if register_Form.validate_on_submit()==False:
             flash("注册信息有误")
+        else:
+            if db.register(username,password):
+                return redirect(url_for('signIn'))
+            else:
+                flash("注册信息有误")
+
     return render_template("register.html",register_Form=register_Form)
     
 
-@app.route('/orders/<int:order_id>')
-def get_order_id(order_id):
-    return 'order_id = #%s'%order_id
+@app.route("/search",methods=["GET","POST"])
+def search():
+    search_Form = searchForm()
+    if request.method == "POST":
+        searchKeyWord = request.form.get("searchKeyWord")
+        if search_Form.validate_on_submit():
+            searchResult = db.searchItems(searchKeyWord)
+            return render_template("searchResult.html",username=session.get('username'),searchResult=searchResult)
+
+    return render_template('home.html',username=session.get('username'),search_Form=search_Form)
+
 
 if __name__ == '__main__':
     db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库

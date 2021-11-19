@@ -31,12 +31,20 @@ class dbQuery():
     def checkPassword(self,username,password):
         hashkey = self.__hash(password)
         sql = "select pswd from dbo.Vip where username='%s'"%(username)
-        self.cursor.execute(sql)
+        try:
+            self.cursor.execute(sql)
+        except:
+            return False
         result = self.cursor.fetchone()[0]
         if (result == hashkey):
             return True
         else:
             return False
+
+    def searchItem(searchKeyWord):
+        searchResult = {}
+        searchResult["item"] = searchKeyWord
+        return searchResult
 
         
         

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
+        <script>
+            function checkAccount()
+            {
+                var un = {{username|tojson}}
+                if (un==null)
+                {
+                    document.getElementById("signIn").innerHTML = "登录"
+                    document.getElementById("greeting").innerHTML = ""
+                }
+                else
+                {
+                    document.getElementById("signIn").innerHTML = "登出/切换账号"
+                    document.getElementById("greeting").innerHTML = "Hello! "+un+""
+                }
+            }
+            setInterval(checkAccount,100) 
+        </script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='logo_lungmen.png') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size: contain;
+            }
+            .topButton
+            {
+                z-index:1;
+                position: fixed;
+            }
+        </style>
+        <style type="text/css">
+            .img1{ position: fixed; top: 225px; right:-5px}
+        </style>
+    </head>
+
+    <body>
+        <h1 align="center">商店</h1>
+        <hr>
+        <div style="position:fixed;float:right">
+        <div class="topButton" style="position:relative;float:left;display:inline">
+            <a href="{{ url_for('signIn') }}">
+                <button id="signIn">登录</button>
+            </a>
+            <a id="register" href="{{ url_for('register') }}">
+                <button>注册</button>
+            </a>
+            <p id='greeting' style='display:inline'></p>
+        </div>
+
+        <div class="topButton" style="position:relative;float:right;display:inline">
+            <button onclick="window.location.href='shoppingCar.html'">购物车</button>
+        </div>
+        <br>
+        <hr>
+        <!-- h1是水平线 -->
+        <div style="display:inline;position:relative">
+            <form method="post" action="{{ url_for('search')} }">
+                {{search_Form.csrf_token()}}
+                {{search_Form.searchKeyWord.label}}{{register_Form.searchKeyWord}}{{register_Form.submit}}
+            </form>
+        </div>
+
+        <hr>
+        <br>
+        <div data-spm-ab="main">
+            <ul class="service-bd" role="menubar">
+            
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >武器</i>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> <!-- 这里面的链接需要改一下-->
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >防具</i>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> <!-- 这里面的链接需要改一下-->
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >药品及食物</i>
+                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> <!-- 这里面的链接需要改一下-->
+            </ul>
+        </div>
+        </div>
+        <div class="img1" >
+            <img src="{{ url_for('static', filename='amiya.png') }}"/>
+        </div>
+        
+        {% for foo in my_list %}
+            {{foo}}
+        {% endfor %}
+    </body>
+</html>

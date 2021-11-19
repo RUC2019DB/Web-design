@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="shortcut icon" href="logo_rhodes.png">
-        <script src="./js/localAccountStorage.js"></script>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
         <script>
-            function signout()
-            {
-                deleteAccount()
-                document.getElementById("account").innerHTML = "未登录"
-            }
             function checkAccount()
             {
-                var username = getAccount()
-                if (username==null) 
+                var un = {{username|tojson}}
+                if (un==null)
                 {
-                    document.getElementById("signin").innerHTML = "登录"
-                    document.getElementById("account").innerHTML = "未登录"
+                    document.getElementById("signIn").innerHTML = "登录"
+                    document.getElementById("greeting").innerHTML = ""
                 }
-                else 
+                else
                 {
-                    document.getElementById("signin").innerHTML = "登出/切换账号"
-                    document.getElementById("account").innerHTML = username
+                    document.getElementById("signIn").innerHTML = "登出/切换账号"
+                    document.getElementById("greeting").innerHTML = "Hello! "+un+""
                 }
-                checkExpire()
             }
-            setInterval(checkAccount,100)
+            setInterval(checkAccount,100) 
         </script>
         <style>
             body 
             {
-                background-image:url('logo_lungmen.png');
+                background-image:url("{{ url_for('static', filename='logo_lungmen.png') }}");
                 background-repeat:no-repeat;
                 background-position:center top;
                 background-attachment: fixed;
@@ -38,6 +31,7 @@
             .topButton
             {
                 z-index:1;
+                position: fixed;
             }
         </style>
         <style type="text/css">
@@ -48,14 +42,15 @@
     <body>
         <h1 align="center">商店</h1>
         <hr>
-
+        <div style="position:fixed;float:right">
         <div class="topButton" style="position:relative;float:left;display:inline">
-            <a id="signIn" href="{{ url_for('signIn') }}">
-                <button>登录</button>
+            <a href="{{ url_for('signIn') }}">
+                <button id="signIn">登录</button>
             </a>
             <a id="register" href="{{ url_for('register') }}">
                 <button>注册</button>
             </a>
+            <p id='greeting' style='display:inline'></p>
         </div>
 
         <div class="topButton" style="position:relative;float:right;display:inline">
@@ -65,15 +60,15 @@
         <hr>
         <!-- h1是水平线 -->
         <div style="display:inline;position:relative">
-            
-            <form style="display: inline">
-                商品搜索:<input type='text' name='name' value='' placeholder="请输入关键词">
+            <form method="post" action="{{ url_for('search') }}">
+                {{search_Form.csrf_token()}}
+                {{search_Form.searchKeyWord.label}}{{search_Form.searchKeyWord}}{{search_Form.submit}}
             </form>
-            
-            <button onclick="window.location.href='searchResult.html'">搜索</button> 
         </div>
 
-        <div  data-spm-ab="main">
+        <hr>
+        <br>
+        <div data-spm-ab="main">
             <ul class="service-bd" role="menubar">
             
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
@@ -90,16 +85,64 @@
                 </li> <!-- 这里面的链接需要改一下-->
             </ul>
         </div>
-
-        <div class="img1" >
-            <img src="{{ url_for('static', filename='1aa7f7abc05ce105b9d5676ef513be0.png') }}"/>
         </div>
-        <p id='account'></p>
+        <div class="img1" >
+            <img src="{{ url_for('static', filename='amiya.png') }}"/>
+        </div>
+        <div align="center" >
+            <div  role="listitem" aria-posinset="1" aria-setsize="50" style="position:relative;width:55%;">
+                <a href="goodsinfo.html" class="hotsale-item">
+                    
+                        <img src="{{ url_for('static', filename='logo_rhodes.png') }}"  width="215" height="215" aria-labelledby="hotsale-item-tl-1">
+                    
+                    <h4>创意分格果盘日式轻奢零食盘客厅茶馆餐厅酒吧干果盘小吃碟点心盘</h4>
+                </a>
+                <p class="info">
+                    <span class="marks hotsale-hide"></span>
+                    <span class="price"><em>¥ </em>15.9</span>
+                <!-- <span class="sales">51人购买</span> -->
+                </p>
+                <!-- <a class="item-more" href="https://www.taobao.com/market/lu/findgoods_router.php?id=7612790655&scm=1007.34127.227518.0&pvid=08ac160f-7ca8-4ddc-bf07-252dc6f396e5&appid=2883&utparam=%7B%22x_object_type%22%3A%22item%22%2C%22x_object_id%22%3A%7612790655%22%7D" title="发现更多相似的宝贝" target="_blank">
+                <p class="similar">查找相似</p>
+                </a> -->
+            </div>
+
+            <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                <a href="goodsinfo.html" width="215" height="215"  >
+                    
+                        <img src="{{ url_for('static', filename='logo_rhodes.png') }}"  width="215" height="215" >
+                    
+                    <h4>日本进口厨房土豆丝刨丝器 多功能蔬菜切丝器 不锈钢刨萝卜丝神器</h4>
+                </a>
+                <p class="info">
+                    <span class="marks hotsale-hide"></span>
+                    <span class="price"><em>¥ </em>9.5</span>
+                  <!-- <span class="sales">158人购买</span> -->
+                </p>
+                <!-- <a class="item-more" href="https://www.taobao.com/market/lu/findgoods_router.php?id=12629809736&scm=1007.34127.227518.0&pvid=08ac160f-7ca8-4ddc-bf07-252dc6f396e5&appid=2883&utparam=%7B%22x_object_type%22%3A%22item%22%2C%22x_object_id%22%3A%12629809736%22%7D" title="发现更多相似的宝贝" target="_blank">
+                  <p class="similar">查找相似</p>
+                </a> -->
+            </div>
+            
+            <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                <a href="goodsinfo.html" class="hotsale-item">
+                    
+                        <img src="{{ url_for('static', filename='logo_rhodes.png') }}"  width="215" height="215" aria-labelledby="hotsale-item-tl-2">
+                    
+                    <h4>日本进口厨房土豆丝刨丝器 多功能蔬菜切丝器 不锈钢刨萝卜丝神器</h4>
+                </a>
+                <p class="info">
+                    <span class="marks hotsale-hide"></span>
+                    <span class="price"><em>¥ </em>9.5</span>
+                <!-- <span class="sales">158人购买</span> -->
+                </p>
+            <!-- <a class="item-more" href="https://www.taobao.com/market/lu/findgoods_router.php?id=12629809736&scm=1007.34127.227518.0&pvid=08ac160f-7ca8-4ddc-bf07-252dc6f396e5&appid=2883&utparam=%7B%22x_object_type%22%3A%22item%22%2C%22x_object_id%22%3A%12629809736%22%7D" title="发现更多相似的宝贝" target="_blank">
+              <p class="similar">查找相似</p>
+            </a> -->
+            </div>
+        </div>
         {% for foo in my_list %}
-            {% if foo>3 %}
-                {{foo}}<br>
-            {% endif %}
+            {{foo}}
         {% endfor %}
-    
     </body>
 </html>
