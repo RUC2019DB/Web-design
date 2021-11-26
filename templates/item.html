@@ -1,97 +1,101 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
-        <script>
-            function checkAccount()
-            {
-                var un = {{username|tojson}}
-                if (un==null)
-                {
-                    document.getElementById("signIn").innerHTML = "登录"
-                    document.getElementById("greeting").innerHTML = ""
-                }
-                else
-                {
-                    document.getElementById("signIn").innerHTML = "登出/切换账号"
-                    document.getElementById("greeting").innerHTML = "Hello! "+un+""
-                }
-            }
-            setInterval(checkAccount,100) 
-        </script>
-        <style>
-            body 
-            {
-                background-image:url("{{ url_for('static', filename='logo_lungmen.png') }}");
-                background-repeat:no-repeat;
-                background-position:center top;
-                background-attachment: fixed;
-                background-size: contain;
-            }
-            .topButton
-            {
-                z-index:1;
-                position: fixed;
-            }
-        </style>
-        <style type="text/css">
-            .img1{ position: fixed; top: 225px; right:-5px}
-        </style>
-    </head>
-
+<head>
+<script src="vue.js"></script>
+  <script>
+  const app = new Vue({
+    el:'#app',
+    data:{
+    books:[
+        {
+            id:1,
+            name:'PHP手册',
+            date:'2020年5月17号',
+            price:33,
+            count:1
+        },
+        {
+            id:2,
+            name:'Python手册',
+            date:'2020年5月17号',
+            price:33,
+            count:1
+        },
+        {
+            id:3,
+            name:'Linux手册',
+            date:'2020年5月17号',
+            price:33,
+            count:1
+        },
+    ],
+    },
+    computed:{
+    totalPrice(){
+        let price = 0;
+        for (let i = 0;i<this.books.length;i++) {
+        price += this.books[i].price * this.books[i].count
+        }
+        return price;
+    }
+    },
+    methods:{
+    increment(index){
+        this.books[index].count ++
+    },
+    decrement(index) {
+        this.books[index].count --
+    },
+    removeBook(index) {
+        this.books.splice(index,1)
+    }
+    },
+    filters: {
+    dealPrice(price){
+        return '$' + price.toFixed(2)
+    }
+    }
+  })
+  </script>
+<meta charset="UTF-8">
+<title>Title</title>
+<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.css" rel="stylesheet">
+</head>
     <body>
-        <h1 align="center">商店</h1>
-        <hr>
-        <div style="position:fixed;float:right">
-        <div class="topButton" style="position:relative;float:left;display:inline">
-            <a href="{{ url_for('signIn') }}">
-                <button id="signIn">登录</button>
-            </a>
-            <a id="register" href="{{ url_for('register') }}">
-                <button>注册</button>
-            </a>
-            <p id='greeting' style='display:inline'></p>
-        </div>
+    <div id="app">
+    <div v-if="books.length">
+    <table class="table table-dark">
+    <thead>
+    <tr>
+    <th scope="col">ID</th>
+    <th scope="col">书籍名称</th>
+    <th scope="col">出版日期</th>
+    <th scope="col">书籍价格</th>
+    <th scope="col">购买数量</th>
+    <th scope="col">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(item,index) in books">
+    <th scope="row">{{item.id}}</th>
+    <td>{{item.name}}</td>
+    <td>{{item.date}}</td>
+    <td>{{item.price | dealPrice}}</td>
+    <td>
+        <button class="btn btn-primary" @click="decrement(index)" :disabled="item.count <= 0">-</button>
+        {{item.count}}
+        <button class="btn btn-primary" @click="increment(index)">+</button>
+    </td>
+    <td>
+        <button class="btn btn-danger" @click="removeBook(index)">移除</button>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+    <h2>总价为 {{totalPrice | dealPrice}}</h2>
+    </div>
+        <h2 v-else>购物车为空</h2>
+    </div>
 
-        <div class="topButton" style="position:relative;float:right;display:inline">
-            <button onclick="window.location.href='shoppingCar.html'">购物车</button>
-        </div>
-        <br>
-        <hr>
-        <!-- h1是水平线 -->
-        <div style="display:inline;position:relative">
-            <form method="post" action="{{ url_for('search')} }">
-                {{search_Form.csrf_token()}}
-                {{search_Form.searchKeyWord.label}}{{register_Form.searchKeyWord}}{{register_Form.submit}}
-            </form>
-        </div>
-
-        <hr>
-        <br>
-        <div data-spm-ab="main">
-            <ul class="service-bd" role="menubar">
-            
-                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-                <i aria-hidden="true" >武器</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-                </li> <!-- 这里面的链接需要改一下-->
-                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-                <i aria-hidden="true" >防具</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-                </li> <!-- 这里面的链接需要改一下-->
-                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-                <i aria-hidden="true" >药品及食物</i>
-                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-                </li> <!-- 这里面的链接需要改一下-->
-            </ul>
-        </div>
-        </div>
-        <div class="img1" >
-            <img src="{{ url_for('static', filename='amiya.png') }}"/>
-        </div>
-        
-        {% for foo in my_list %}
-            {{foo}}
-        {% endfor %}
     </body>
 </html>

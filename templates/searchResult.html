@@ -1,12 +1,25 @@
 <html>
     <head>
-        <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     </head>
     <body>
-        <h1 align="center"></h1>
-        <div>
-            {{searchResult}}
-        </div>
+        {% for item in result%}
+            <h1 align="center"></h1>
+            <div>
+                <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                    <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                        
+                            <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+                        
+                        <h4>{{ item['gname'] }}</h4>
+                    </a>
+                    <p class="info">
+                        <span class="marks hotsale-hide"></span>
+                        <span class="price"><em>¥ </em>{{item['gprice']}}</span>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
         <p id='checkResult'></p>
     </body>
 </html>

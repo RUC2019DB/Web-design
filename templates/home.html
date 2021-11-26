@@ -90,59 +90,23 @@
             <img src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
         <div align="center" >
-            <div  role="listitem" aria-posinset="1" aria-setsize="50" style="position:relative;width:55%;">
-                <a href="goodsinfo.html" class="hotsale-item">
-                    
-                        <img src="{{ url_for('static', filename='logo_rhodes.png') }}"  width="215" height="215" aria-labelledby="hotsale-item-tl-1">
-                    
-                    <h4>创意分格果盘日式轻奢零食盘客厅茶馆餐厅酒吧干果盘小吃碟点心盘</h4>
-                </a>
-                <p class="info">
-                    <span class="marks hotsale-hide"></span>
-                    <span class="price"><em>¥ </em>15.9</span>
-                <!-- <span class="sales">51人购买</span> -->
-                </p>
-                <!-- <a class="item-more" href="https://www.taobao.com/market/lu/findgoods_router.php?id=7612790655&scm=1007.34127.227518.0&pvid=08ac160f-7ca8-4ddc-bf07-252dc6f396e5&appid=2883&utparam=%7B%22x_object_type%22%3A%22item%22%2C%22x_object_id%22%3A%7612790655%22%7D" title="发现更多相似的宝贝" target="_blank">
-                <p class="similar">查找相似</p>
-                </a> -->
-            </div>
-
-            <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-                <a href="goodsinfo.html" width="215" height="215"  >
-                    
-                        <img src="{{ url_for('static', filename='logo_rhodes.png') }}"  width="215" height="215" >
-                    
-                    <h4>日本进口厨房土豆丝刨丝器 多功能蔬菜切丝器 不锈钢刨萝卜丝神器</h4>
-                </a>
-                <p class="info">
-                    <span class="marks hotsale-hide"></span>
-                    <span class="price"><em>¥ </em>9.5</span>
-                  <!-- <span class="sales">158人购买</span> -->
-                </p>
-                <!-- <a class="item-more" href="https://www.taobao.com/market/lu/findgoods_router.php?id=12629809736&scm=1007.34127.227518.0&pvid=08ac160f-7ca8-4ddc-bf07-252dc6f396e5&appid=2883&utparam=%7B%22x_object_type%22%3A%22item%22%2C%22x_object_id%22%3A%12629809736%22%7D" title="发现更多相似的宝贝" target="_blank">
-                  <p class="similar">查找相似</p>
-                </a> -->
-            </div>
-            
-            <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-                <a href="goodsinfo.html" class="hotsale-item">
-                    
-                        <img src="{{ url_for('static', filename='logo_rhodes.png') }}"  width="215" height="215" aria-labelledby="hotsale-item-tl-2">
-                    
-                    <h4>日本进口厨房土豆丝刨丝器 多功能蔬菜切丝器 不锈钢刨萝卜丝神器</h4>
-                </a>
-                <p class="info">
-                    <span class="marks hotsale-hide"></span>
-                    <span class="price"><em>¥ </em>9.5</span>
-                <!-- <span class="sales">158人购买</span> -->
-                </p>
-            <!-- <a class="item-more" href="https://www.taobao.com/market/lu/findgoods_router.php?id=12629809736&scm=1007.34127.227518.0&pvid=08ac160f-7ca8-4ddc-bf07-252dc6f396e5&appid=2883&utparam=%7B%22x_object_type%22%3A%22item%22%2C%22x_object_id%22%3A%12629809736%22%7D" title="发现更多相似的宝贝" target="_blank">
-              <p class="similar">查找相似</p>
-            </a> -->
-            </div>
+            {% for item in randomItems %}
+                <h1 align="center"></h1>
+                <div>
+                    <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                        <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                            
+                                <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+                            
+                            <h4>{{ item['gname'] }}</h4>
+                        </a>
+                        <p class="info">
+                            <span class="marks hotsale-hide"></span>
+                            <span class="price"><em>¥ </em>{{item['gprice']}}</span>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% for foo in my_list %}
-            {{foo}}
-        {% endfor %}
     </body>
 </html>
