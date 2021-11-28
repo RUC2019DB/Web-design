@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="vue.js"></script>
+<script src="{{ url_for('static',filename='js/vue.min.js') }}"></script>
   <script>
   const app = new Vue({
     el:'#app',
     data:{
-    books:[
-        {
-            id:1,
-            name:'PHP手册',
-            date:'2020年5月17号',
-            price:33,
-            count:1
-        },
-        {
-            id:2,
-            name:'Python手册',
-            date:'2020年5月17号',
-            price:33,
-            count:1
-        },
-        {
-            id:3,
-            name:'Linux手册',
-            date:'2020年5月17号',
-            price:33,
-            count:1
-        },
-    ],
+        books:[
+            {
+                id:1,
+                name:'PHP手册',
+                date:'2020年5月17号',
+                price:33,
+                count:1
+            },
+            {
+                id:2,
+                name:'Python手册',
+                date:'2020年5月17号',
+                price:33,
+                count:1
+            },
+            {
+                id:3,
+                name:'Linux手册',
+                date:'2020年5月17号',
+                price:33,
+                count:1
+            },
+        ],
     },
     computed:{
-    totalPrice(){
-        let price = 0;
-        for (let i = 0;i<this.books.length;i++) {
-        price += this.books[i].price * this.books[i].count
+        totalPrice(){
+            let price = 0;
+            for (let i = 0;i<this.books.length;i++) {
+            price += this.books[i].price * this.books[i].count
+            }
+            return price;
         }
-        return price;
-    }
     },
     methods:{
-    increment(index){
-        this.books[index].count ++
-    },
-    decrement(index) {
-        this.books[index].count --
-    },
-    removeBook(index) {
-        this.books.splice(index,1)
-    }
+        increment(index){
+            this.books[index].count ++
+        },
+        decrement(index) {
+            this.books[index].count --
+        },
+        removeBook(index) {
+            this.books.splice(index,1)
+        }
     },
     filters: {
-    dealPrice(price){
-        return '$' + price.toFixed(2)
-    }
+        dealPrice(price){
+            return '$' + price.toFixed(2)
+        }
     }
   })
   </script>
@@ -62,40 +62,38 @@
 <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.css" rel="stylesheet">
 </head>
     <body>
-    <div id="app">
-    <div v-if="books.length">
-    <table class="table table-dark">
-    <thead>
-    <tr>
-    <th scope="col">ID</th>
-    <th scope="col">书籍名称</th>
-    <th scope="col">出版日期</th>
-    <th scope="col">书籍价格</th>
-    <th scope="col">购买数量</th>
-    <th scope="col">操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="(item,index) in books">
-    <th scope="row">{{item.id}}</th>
-    <td>{{item.name}}</td>
-    <td>{{item.date}}</td>
-    <td>{{item.price | dealPrice}}</td>
-    <td>
-        <button class="btn btn-primary" @click="decrement(index)" :disabled="item.count <= 0">-</button>
-        {{item.count}}
-        <button class="btn btn-primary" @click="increment(index)">+</button>
-    </td>
-    <td>
-        <button class="btn btn-danger" @click="removeBook(index)">移除</button>
-    </td>
-    </tr>
-    </tbody>
-    </table>
-    <h2>总价为 {{totalPrice | dealPrice}}</h2>
-    </div>
-        <h2 v-else>购物车为空</h2>
-    </div>
+        <div id="app">
+        <div v-if="books.length">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">商品名称</th>
+                    <th scope="col">商品价格</th>
+                    <th scope="col">购买数量</th>
+                    <th scope="col">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in books">
+                    <th scope="row">{{item.gno}}</th>
+                    <td>{{item.gname}}</td>
+                    <td>{{item.gprice}}</td>
+                    <td>
+                        <button class="btn btn-primary" @click="decrement(index)" :disabled="item.count = 0">-</button>
+                            {{item.count}}
+                        <button class="btn btn-primary" @click="increment(index)">+</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" @click="removeBook(index)">移除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>总价为 {{totalPrice}}</h2>
+        </div>
+            <h2 v-else>购物车为空</h2>
+        </div>
 
     </body>
 </html>

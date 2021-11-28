@@ -1,7 +1,7 @@
 # coding=utf-8
 import hashlib
 import pymssql
-
+from werkzeug.utils import secure_filename
 from Form import searchForm
 
 class dbQuery():
@@ -25,15 +25,15 @@ class dbQuery():
     def __toZH(self,str):#解决数据库查询时中文显示乱码的问题
         return str.encode('latin-1').decode('gbk')
 
-    def register(self,userInfo):#注册
+    def vipRegister(self,userInfo):#注册vip
         hashkey = self.__hash(userInfo["password1"])
         sql = "select count(*) vipnum from ruc.vip"
         self.cursor.execute(sql)
         vipnum = self.cursor.fetchone()["vipnum"]
         sql = ("insert into ruc.vip values('%s',%d,'%s','%s','%s','%s','%s','%s')"
-                %(userInfo["username"],vipnum+1,hashkey,
-                  userInfo["birthdate"],userInfo["sex"],
-                  userInfo["province"],userInfo["address"],
+                %(userInfo["username"], vipnum+1, hashkey,
+                  userInfo["birthdate"], userInfo["sex"],
+                  userInfo["province"], userInfo["address"],
                   userInfo["phone"]))
         try:
             self.cursor.execute(sql)
@@ -42,14 +42,35 @@ class dbQuery():
         else:
             return True
 
-    def checkPassword(self,username,password):#密码验证
-        hashkey = self.__hash(password)
-        sql = "select vipkey from ruc.vip where vipname='%s'"%(username)
+    
+    def storeRegister(self,storeInfo):#注册商店
+        hashkey = self.__hash(storeInfo["password1"])
+        sql = "select count(*) storenum from ruc.store"
+        self.cursor.execute(sql)
+        storenum = self.cursor.fetchone()["storenum"]
+        sql = ("insert into ruc.store(stname,stno,stkey,staddress) values('%s',%d,'%s','%s')"
+                %(storeInfo["storename"], storenum+1, hashkey, storeInfo["address"]))
         try:
             self.cursor.execute(sql)
         except:
             return False
-        result = self.cursor.fetchone()["vipkey"]
+        else:
+            return True
+
+
+    def checkPassword(self,usertype,username,password):#密码验证
+        hashkey = self.__hash(password)
+        if usertype=='VIP':
+            sql = "select vipkey from ruc.vip where vipname='%s'"%(username)
+            key = "vipkey"
+        else:
+            sql = "select stkey from ruc.store where stname='%s'"%(username)
+            key = "stkey"
+        try:
+            self.cursor.execute(sql)
+        except:
+            return False
+        result = self.cursor.fetchone()[key]
         if (result == hashkey):
             return True
         else:
@@ -65,6 +86,7 @@ class dbQuery():
         for i in range(len(result)):
             result[i]["gname"] = self.__toZH(result[i]["gname"])
             result[i]["gsort"] = self.__toZH(result[i]["gsort"])
+            result[i]["gpic"] = self.__toZH(result[i]["gpic"])
         return result
 
     def searchItems(self,searchKeyWord):#搜索商品
@@ -77,6 +99,7 @@ class dbQuery():
         for i in range(len(searchResult)):
             searchResult[i]["gname"] = self.__toZH(searchResult[i]["gname"])
             searchResult[i]["gsort"] = self.__toZH(searchResult[i]["gsort"])
+            searchResult[i]["gpic"] = self.__toZH(searchResult[i]["gpic"])
         return searchResult
 
 
@@ -89,8 +112,28 @@ class dbQuery():
         itemInfo = self.cursor.fetchone()
         itemInfo["gname"] = self.__toZH(itemInfo["gname"])
         itemInfo["gsort"] = self.__toZH(itemInfo["gsort"])
+        itemInfo["gpic"] = self.__toZH(itemInfo["gpic"])
         return itemInfo
 
 
-        
+    def postItem(self,username,item,itempic):
+        sql = "select count(*) itemnum from ruc.goods"
+        self.cursor.execute(sql)
+        itemnum = self.cursor.fetchone()["itemnum"]
+        sql = "select stno from ruc.store where stname='%s'"%(username)
+        self.cursor.execute(sql)
+        stno = self.cursor.fetchone()["stno"]
+        sql = ("insert into ruc.goods values('%s',%d,'%s',%f,%d,%d,'%s')"
+               %(item['itemname'], itemnum+1, item['itemsort'],
+                 item['itemprice'], stno, item['itemsale'],
+                 itempic.filename))
+        try:
+            self.cursor.execute(sql)
+        except:
+            return False
+        else:
+            return True
+            
+
+
         

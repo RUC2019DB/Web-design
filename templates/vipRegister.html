@@ -1,0 +1,24 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1 align="center">注册用户</h1>
+        <div>
+            <form method="post">
+                {{vipRegister_Form.csrf_token()}}
+                {{vipRegister_Form.username.label}}{{vipRegister_Form.username}}<br>
+                {{vipRegister_Form.password1.label}}{{vipRegister_Form.password1}}<br>
+                {{vipRegister_Form.password2.label}}{{vipRegister_Form.password2}}<br>
+                {{vipRegister_Form.birthdate.label}}{{vipRegister_Form.birthdate}}<br>
+                {{vipRegister_Form.sex.label}}{{vipRegister_Form.sex}}<br>
+                {{vipRegister_Form.province.label}}{{vipRegister_Form.province}}<br>
+                {{vipRegister_Form.address.label}}{{vipRegister_Form.address}}<br>
+                {{vipRegister_Form.phone.label}}{{vipRegister_Form.phone}}<br>
+                {{vipRegister_Form.submit}}<br>
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    </head>
+    <body>
+        <h1 align="center">发布商品</h1>
+        <div>
+            <form action="{{ url_for('postItem') }}" method="POST" enctype="multipart/form-data">
+                <label for='itemname'>商品名称:</label>
+                <input type='text' id='itemname' name='itemname'><br>
+
+                <label for='itemsort'>商品类型:</label>
+                <input type='text' id='itemsort' name='itemsort'><br>
+
+                <label for='itemprice'>商品价格:</label>
+                <input type='text' id='itemprice' name='itemprice' onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')"><br>
+
+                <label for='itemsale'>商品库存量:</label>
+                <input type='text' id='itemsale' name='itemsale' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
+
+                <label for='itempic'>商品图片:</label>
+                <input type="file" id='itempic' name="itempic" accept=".jpg,.png"/><br>
+
+                <input type='submit' value='上传'>
+            </form>
+            {% for message in get_flashed_messages() %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <p id='checkResult'></p>
+    </body>
+</html>

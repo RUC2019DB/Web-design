@@ -1,0 +1,20 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1 align="center">注册商店</h1>
+        <div>
+            <form method="post">
+                {{storeRegister_Form.csrf_token()}}
+                {{storeRegister_Form.storename.label}}{{storeRegister_Form.storename}}<br>
+                {{storeRegister_Form.password1.label}}{{storeRegister_Form.password1}}<br>
+                {{storeRegister_Form.password2.label}}{{storeRegister_Form.password2}}<br>
+                {{storeRegister_Form.address.label}}{{storeRegister_Form.address}}<br>
+                {{storeRegister_Form.submit}}<br>
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
+            </form>
+        </div>
+    </body>
+</html>

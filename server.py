@@ -3,6 +3,7 @@ from flask import Flask,render_template,request,flash,redirect,session
 from flask.helpers import url_for
 from dbQuery import *
 from Form import *
+import os
 
 #服务器
 app = Flask(__name__)
@@ -13,23 +14,27 @@ app.config['JSON_AS_ASCII'] = False
 def home():
     search_Form = searchForm()
     randomItems = db.randomItems(5)
-    return render_template('home.html',username=session.get('username'),search_Form=search_Form,randomItems=randomItems)
+    return render_template('home.html',usertype=session.get('usertype'),username=session.get('username'),
+                           search_Form=search_Form,randomItems=randomItems)
 
 
 @app.route("/signIn",methods=["GET","POST"])
 def signIn():
     try:
         session.pop("username")
+        session.pop("usertype")
     except:
         pass
     signIn_form = signInForm()
     if request.method == "POST":
+        usertype = request.form.get("usertype")
         username = request.form.get("username")
         password = request.form.get("password")
         if signIn_form.validate_on_submit()==False:
-            flash("用户名或密码不能为空")
+            flash("登录信息不能为空")
         else:
-            if db.checkPassword(username,password):
+            if db.checkPassword(usertype,username,password):
+                session["usertype"] = usertype
                 session["username"] = username
                 return redirect(url_for('home'))
             else:
@@ -38,21 +43,37 @@ def signIn():
     return render_template("signIn.html",signIn_form=signIn_form)
 
 
-@app.route("/register",methods=["GET","POST"])
-def register():
-    register_Form = registerForm()
+@app.route("/vipRegister",methods=["GET","POST"])
+def vipRegister():
+    vipRegister_Form = vipRegisterForm()
     if request.method == "POST":
         userInfo = request.form.to_dict()
-        if register_Form.validate_on_submit()==False:
+        if vipRegister_Form.validate_on_submit()==False:
             flash("注册信息有误")
         else:
-            if db.register(userInfo):
+            if db.vipRegister(userInfo):
                 return redirect(url_for('signIn'))
             else:
                 flash("注册信息有误")
 
-    return render_template("register.html",register_Form=register_Form)
+    return render_template("vipRegister.html",vipRegister_Form=vipRegister_Form)
     
+
+@app.route("/storeRegister",methods=["GET","POST"])
+def storeRegister():
+    storeRegister_Form = storeRegisterForm()
+    if request.method == "POST":
+        storeInfo = request.form.to_dict()
+        if storeRegister_Form.validate_on_submit()==False:
+            flash("注册信息有误")
+        else:
+            if db.storeRegister(storeInfo):
+                return redirect(url_for('signIn'))
+            else:
+                flash("注册信息有误")
+
+    return render_template("storeRegister.html",storeRegister_Form=storeRegister_Form)
+
 
 @app.route("/searchResult/?<string:searchKeyWord>",methods=["GET","POST"])
 def searchResult(searchKeyWord):
@@ -60,7 +81,7 @@ def searchResult(searchKeyWord):
     return render_template("searchResult.html",username=session.get('username'),result=result)
 
 
-@app.route("/search/",methods=["GET","POST"])
+@app.route("/search",methods=["GET","POST"])
 def search():
     search_Form = searchForm()
     if (request.method == "POST")&(search_Form.validate_on_submit()):
@@ -71,8 +92,36 @@ def search():
 
 @app.route("/item/?<int:gno>",methods=["GET","POST"])
 def item(gno):
-    itemInfo = db.getItem(gno)
-    return render_template("item.html",itemInfo=itemInfo)
+    item = db.getItem(gno)
+    return render_template("item.html",item=item)
+
+
+@app.route("/postItem",methods=["GET","POST"])
+def postItem():
+    if request.method == "POST":
+        usertype = session.get("usertype")
+        username = session.get("username")
+        if usertype!='商家':
+            flash("商家请先登录")
+        else:
+            item = request.form.to_dict()
+            itempic = request.files.get("itempic")
+            if ((item["itemname"]=='')|(item["itemsort"]=='')|(itempic.filename=='')):
+                flash("商品信息有误")
+            else:
+                try:
+                    item["itemprice"] = float(item["itemprice"])
+                    item["itemsale"] = int(item["itemsale"])
+                except:
+                    flash("商品信息有误")
+                else:
+                    if db.postItem(username,item,itempic):
+                        itempic.save(os.path.join('static/',itempic.filename))
+                        flash("上传成功!")
+                    else:
+                        flash("上传失败")
+    return render_template('postItem.html')
+
 
 if __name__ == '__main__':
     db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库

@@ -2,6 +2,17 @@
 <html>
     <head>
         <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
+        <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+        <script>
+            $(function () //当网页回退时自动刷新一次
+            {
+                window.onpageshow = function (event) {
+                    if (event.persisted) {
+                        window.location.reload();
+                    }
+                }
+            });
+        </script>
         <script>
             function checkAccount()
             {
@@ -47,8 +58,14 @@
             <a href="{{ url_for('signIn') }}">
                 <button id="signIn">登录</button>
             </a>
-            <a id="register" href="{{ url_for('register') }}">
-                <button>注册</button>
+            <a id="vipRegister" href="{{ url_for('vipRegister') }}">
+                <button>VIP注册</button>
+            </a>
+            <a id="storeRegister" href="{{ url_for('storeRegister') }}">
+                <button>商家注册</button>
+            </a>
+            <a id="postItem" href="{{ url_for('postItem') }}">
+                <button>发布商品</button>
             </a>
             <p id='greeting' style='display:inline'></p>
         </div>
@@ -73,15 +90,21 @@
             
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
                 <i aria-hidden="true" >武器</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
                 </li> <!-- 这里面的链接需要改一下-->
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
                 <i aria-hidden="true" >防具</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
                 </li> <!-- 这里面的链接需要改一下-->
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
                 <i aria-hidden="true" >药品及食物</i>
-                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span><a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span>
+                        <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span>
+                        <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
                 </li> <!-- 这里面的链接需要改一下-->
             </ul>
         </div>

@@ -7,6 +7,7 @@
         <div>
             <form method="post">
                 {{signIn_form.csrf_token()}}
+                {{signIn_form.usertype.label}}{{signIn_form.usertype}}<br>
                 {{signIn_form.username.label}}{{signIn_form.username}}<br>
                 {{signIn_form.password.label}}{{signIn_form.password}}<br>
                 {{signIn_form.submit}}<br>
