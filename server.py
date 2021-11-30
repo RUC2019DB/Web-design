@@ -123,6 +123,47 @@ def postItem():
     return render_template('postItem.html')
 
 
+@app.route("/add2cart/?<int:gno>",methods=["GET","POST"])
+def add2cart(gno):
+    if request.method == "POST":
+        usertype = session.get("usertype")
+        username = session.get("username")
+        if usertype!='VIP':
+            flash("请登录VIP账户")
+        else:
+            try:
+                num = int(request.form.get("num"))
+            except:
+                flash("请输入购买数量")
+            else:
+                db.add2cart(username,gno,num)
+    return render_template("item.html")
+
+
+@app.route("/shoppingCart",methods=["GET","POST"])
+def shoppingCart():
+    cart = None
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        flash("请登录VIP账户")
+    else:
+        cart = db.checkCart(username)
+    return render_template("shoppingCart.html",cart=cart)
+
+
+@app.route("/pay",methods=["GET","POST"])
+def pay():
+    pay_Form = payForm()
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        flash("请登录VIP账户")
+    else:
+        pass
+    return render_template("pay.html",pay_Form=pay_Form)
+
+
 if __name__ == '__main__':
     db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库
     if db.ifconn:

@@ -133,6 +133,21 @@ class dbQuery():
             return False
         else:
             return True
+
+    
+    def add2cart(self,username,gno,num):
+        pass
+
+    
+    def checkCart(self,username):
+        sql = "select vipno from ruc.vip where vipname='%s'"%(username)
+        self.cursor.execute(sql)
+        vipno = self.cursor.fetchone()["vipno"]
+        sql = "select * from ruc.cart where vipno=%d"%(vipno)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        return result
+
             
 
 

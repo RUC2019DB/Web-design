@@ -1,0 +1,13 @@
+<html>
+    <body>
+        <h1 align="center">结算</h1>
+        {{pay_Form.receiver.label}}{{pay_Form.receiver}}<br>
+        {{pay_Form.phone.label}}{{pay_Form.phone}}<br>
+        {{pay_Form.address.label}}{{pay_Form.address}}<br>
+        {{pay_Form.submit}}<br>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+        <br>
+    </body>
+</html>

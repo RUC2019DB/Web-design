@@ -1,99 +1,25 @@
-<!DOCTYPE html>
 <html>
-<head>
-<script src="{{ url_for('static',filename='js/vue.min.js') }}"></script>
-  <script>
-  const app = new Vue({
-    el:'#app',
-    data:{
-        books:[
-            {
-                id:1,
-                name:'PHP手册',
-                date:'2020年5月17号',
-                price:33,
-                count:1
-            },
-            {
-                id:2,
-                name:'Python手册',
-                date:'2020年5月17号',
-                price:33,
-                count:1
-            },
-            {
-                id:3,
-                name:'Linux手册',
-                date:'2020年5月17号',
-                price:33,
-                count:1
-            },
-        ],
-    },
-    computed:{
-        totalPrice(){
-            let price = 0;
-            for (let i = 0;i<this.books.length;i++) {
-            price += this.books[i].price * this.books[i].count
-            }
-            return price;
-        }
-    },
-    methods:{
-        increment(index){
-            this.books[index].count ++
-        },
-        decrement(index) {
-            this.books[index].count --
-        },
-        removeBook(index) {
-            this.books.splice(index,1)
-        }
-    },
-    filters: {
-        dealPrice(price){
-            return '$' + price.toFixed(2)
-        }
-    }
-  })
-  </script>
-<meta charset="UTF-8">
-<title>Title</title>
-<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.css" rel="stylesheet">
-</head>
+    <head>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    </head>
     <body>
-        <div id="app">
-        <div v-if="books.length">
-        <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">商品名称</th>
-                    <th scope="col">商品价格</th>
-                    <th scope="col">购买数量</th>
-                    <th scope="col">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item,index) in books">
-                    <th scope="row">{{item.gno}}</th>
-                    <td>{{item.gname}}</td>
-                    <td>{{item.gprice}}</td>
-                    <td>
-                        <button class="btn btn-primary" @click="decrement(index)" :disabled="item.count = 0">-</button>
-                            {{item.count}}
-                        <button class="btn btn-primary" @click="increment(index)">+</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" @click="removeBook(index)">移除</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <h2>总价为 {{totalPrice}}</h2>
+        <h1 align="center">商品页面</h1>
+        <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+            <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+            <h4>{{ item['gname'] }}</h4>
+            <p class="info">
+                <span class="marks hotsale-hide"></span>
+                <span class="price"><em>¥</em>{{item['gprice']}}</span>
+                <span class="price"><em>库存量</em>{{item['gsale']}}</span>
+            </p>
         </div>
-            <h2 v-else>购物车为空</h2>
-        </div>
-
+        <form action="{{ url_for('add2cart',gno=item['gno']) }}" method="post">
+            <label for='itemsale'>购买:</label>
+            <input type='text' id='num' name='num' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
+            <input type='submit' value='添加至购物车'>
+        </form>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
     </body>
 </html>

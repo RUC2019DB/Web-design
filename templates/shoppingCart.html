@@ -1,0 +1,28 @@
+<html>
+    <body>
+        <h1 align="center">购物车</h1>
+        {% if item %}
+            {% for item in cart %}
+                <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                    <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                        <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+                        <p>{{ item['gname'] }}<p>
+                    </a>
+                    <p class="info">
+                        <span class="marks hotsale-hide"></span>
+                        <span class="price"><em>单价:¥</em>{{item['gprice']}}</span>
+                        <span class="quantity"><em>  购买数量:</em>{{item['gquantity']}}</span>
+                    </p>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+        <br>
+        <a href="{{ url_for('pay') }}">
+            <button id="pay">结算</button>
+        </a>
+    </body>
+</html>

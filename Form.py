@@ -33,9 +33,9 @@ class searchForm(FlaskForm):
     searchKeyWord = StringField('商品搜索:',validators=[DataRequired()])
     submit = SubmitField('搜索')
 
-class itemForm(FlaskForm):
-    itemname = StringField("商品名称",validators=[DataRequired()])
-    itemsort = StringField("商品类型",validators=[DataRequired()])
-    itemprice = FloatField("商品价格",validators=[DataRequired()])
-    itemsale = IntegerField("商品库存量",validators=[DataRequired()])
-    submit = SubmitField('提交')
+
+class payForm(FlaskForm):
+    receiver = StringField("收货人",validators=[DataRequired()])
+    phone = StringField("手机号码:",validators=[DataRequired()])
+    address = StringField('收货地址:',validators=[DataRequired()])
+    submit = SubmitField('支付')
