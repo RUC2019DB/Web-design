@@ -18,6 +18,13 @@
             <input type='text' id='num' name='num' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
             <input type='submit' value='添加至购物车'>
         </form>
+        <h1>评论</h1>
+        {% if comments %}
+            {% for comment in comments %}
+                {{comment["vipname"]}} {{comment["orderdate"]}} 
+                {{comment["gcomment"]}}<br>
+            {% endfor %}
+        {% endif %}
         {% for message in get_flashed_messages() %}
             {{ message }}
         {% endfor %}

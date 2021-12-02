@@ -3,6 +3,7 @@ import hashlib
 import pymssql
 from werkzeug.utils import secure_filename
 from Form import searchForm
+import time
 
 class dbQuery():
     def __init__(self,dbIP,dbusername,dbpassword,dbname):
@@ -24,6 +25,18 @@ class dbQuery():
 
     def __toZH(self,str):#解决数据库查询时中文显示乱码的问题
         return str.encode('latin-1').decode('gbk')
+
+    def __getvipno(self,username):
+        vipno = 0
+        sql = "select vipno from ruc.vip where vipname='%s'"%(username)
+        try:
+            self.cursor.execute(sql)
+        except:
+            vipno = -1
+        else:
+            vipno = self.cursor.fetchone()["vipno"]
+        return vipno
+
 
     def vipRegister(self,userInfo):#注册vip
         hashkey = self.__hash(userInfo["password1"])
@@ -115,6 +128,15 @@ class dbQuery():
         itemInfo["gpic"] = self.__toZH(itemInfo["gpic"])
         return itemInfo
 
+    def getComments(self,gno):
+        sql = "select vipname,gcomment,orderdate from ruc.orders o,ruc.vip p where o.vipno=p.vipno and gno=%d and gcomment is not NULL"%(gno)
+        self.cursor.execute(sql)
+        comments = self.cursor.fetchall()
+        if len(comments)>0:
+            for i in range(len(comments)):
+                comments[i]["gcomment"] = self.__toZH(comments[i]["gcomment"])
+        return comments
+
 
     def postItem(self,username,item,itempic):
         sql = "select count(*) itemnum from ruc.goods"
@@ -136,17 +158,71 @@ class dbQuery():
 
     
     def add2cart(self,username,gno,num):
-        pass
+        vipno = self.__getvipno(username)
+
+        sql = "select gsale from ruc.goods where gno=%d"%(gno)
+        self.cursor.execute(sql)
+        storage = self.cursor.fetchone()["gsale"]
+
+        sql = "select * from ruc.cart where vipno=%d and gno=%d"%(vipno,gno)
+        self.cursor.execute(sql)
+        exist = self.cursor.fetchall()
+        if len(exist)>0:#该用户的购物车已有这个商品
+            if num+exist[0]["gquantity"]>storage: #加入购物车的数量不能超过库存数
+                return False
+            else:
+                sql = "update ruc.cart set gquantity=gquantity+%d where vipno=%d and gno=%d"%(num,vipno,gno)
+        else:#该用户的购物车没有这个商品
+            if num>storage:#加入购物车的数量不能超过库存数
+                return False
+            else:
+                sql = "insert into ruc.cart values(%d,%d,%d)"%(gno,vipno,num)
+        try:
+            self.cursor.execute(sql)
+        except:
+            return False
+        else:
+            return True
+
+    def deleteFromCart(self,username,gno):
+        vipno = self.__getvipno(username)
+        sql = "delete from ruc.cart where vipno=%d and gno=%d"%(vipno,gno)
+        self.cursor.execute(sql)
 
     
     def checkCart(self,username):
-        sql = "select vipno from ruc.vip where vipname='%s'"%(username)
-        self.cursor.execute(sql)
-        vipno = self.cursor.fetchone()["vipno"]
-        sql = "select * from ruc.cart where vipno=%d"%(vipno)
+        vipno = self.__getvipno(username)
+        sql = "select * from ruc.goods g, ruc.cart c where g.gno=c.gno and vipno=%d"%(vipno)
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
+        for i in range(len(result)):
+            result[i]["gname"] = self.__toZH(result[i]["gname"])
+            result[i]["gsort"] = self.__toZH(result[i]["gsort"])
         return result
+
+
+    def generateOrder(self,username):
+        cart = self.checkCart(username)
+        for i in range(len(cart)):
+            if cart[i]["gquantity"]>cart[i]["gsale"]:
+                return False
+        vipno = self.__getvipno(username)
+        ordertime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        sql = "select orderno from ruc.orders group by orderno"
+        self.cursor.execute(sql)
+        orderno = len(self.cursor.fetchall()) + 1
+        for i in range(len(cart)):
+            #生成订单到orders表
+            sql = ("insert into ruc.orders(orderno, orderdate, vipno, gno, gprice, gstate, gquantity) values(%d,'%s',%d,%d,%f,'%s',%d)"
+                    %(orderno,ordertime,vipno,cart[i]["gno"],cart[i]["gprice"],"待发货",cart[i]["gquantity"]))
+            self.cursor.execute(sql)
+            #更新goods表中的库存量
+            sql = "update ruc.goods set gsale=gsale-%d where gno=%d"%(cart[i]["gquantity"],cart[i]["gno"])
+            self.cursor.execute(sql)
+        sql = "delete from ruc.cart where vipno=%d"%(vipno)
+        self.cursor.execute(sql)
+        return True
+
 
             
 

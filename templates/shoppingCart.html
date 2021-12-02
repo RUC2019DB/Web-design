@@ -1,7 +1,7 @@
 <html>
     <body>
         <h1 align="center">购物车</h1>
-        {% if item %}
+        {% if cart %}
             {% for item in cart %}
                 <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
                     <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
@@ -13,6 +13,9 @@
                         <span class="price"><em>单价:¥</em>{{item['gprice']}}</span>
                         <span class="quantity"><em>  购买数量:</em>{{item['gquantity']}}</span>
                     </p>
+                    <form action="{{ url_for('deleteFromCart',gno=item['gno']) }}" method="POST">
+                        <input type='submit' value='删除'>
+                    </form>
                 </div>
             {% endfor %}
         {% endif %}

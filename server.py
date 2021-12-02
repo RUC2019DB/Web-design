@@ -93,7 +93,8 @@ def search():
 @app.route("/item/?<int:gno>",methods=["GET","POST"])
 def item(gno):
     item = db.getItem(gno)
-    return render_template("item.html",item=item)
+    comments = db.getComments(gno)
+    return render_template("item.html",item=item,comments=comments)
 
 
 @app.route("/postItem",methods=["GET","POST"])
@@ -136,8 +137,9 @@ def add2cart(gno):
             except:
                 flash("请输入购买数量")
             else:
-                db.add2cart(username,gno,num)
-    return render_template("item.html")
+                if db.add2cart(username,gno,num)==False:
+                    flash("加入购物车的数量不能超过库存数")
+    return redirect(url_for('item',gno=gno))
 
 
 @app.route("/shoppingCart",methods=["GET","POST"])
@@ -151,17 +153,37 @@ def shoppingCart():
         cart = db.checkCart(username)
     return render_template("shoppingCart.html",cart=cart)
 
+@app.route("/deleteFromCart/?<int:gno>",methods=["GET","POST"])
+def deleteFromCart(gno):
+    if request.method=="POST":
+        username = session.get("username")
+        db.deleteFromCart(username,gno)
+    return redirect(url_for('shoppingCart'))
+
+
 
 @app.route("/pay",methods=["GET","POST"])
 def pay():
     pay_Form = payForm()
     usertype = session.get("usertype")
     username = session.get("username")
+    allPrice = 0
+    allItem = None
     if usertype!="VIP":
         flash("请登录VIP账户")
     else:
-        pass
-    return render_template("pay.html",pay_Form=pay_Form)
+        allItem = db.checkCart(username)
+        for i in range(len(allItem)):
+            allPrice += allItem[i]["gprice"] * allItem[i]["gquantity"]
+        if request.method == 'POST':
+            if len(allItem)==0:
+                flash("购物车为空")
+            else:
+                if db.generateOrder(username):
+                    return "付款成功"
+                else:
+                    flash("订单有误,库存量不足")
+    return render_template("pay.html",pay_Form=pay_Form,allItem=allItem,allPrice=allPrice)
 
 
 if __name__ == '__main__':
