@@ -1,32 +1,115 @@
 <html>
     <head>
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='bgBlueSky.jfif') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size: auto;
+            }
+           
+        </style>
+        
+        <style type="text/css">   
+     
+            *{   
+                margin: 0;   
+                padding: 0; 
+            }  
+            .bg-white {
+                background: #fff;
+            } 
+            .inner{
+                     width:50%
+                    }
+            .inner-title {
+                    padding-left: .25rem;
+                    padding-right: .25rem;
+                    padding-top: .625rem;
+                    padding-bottom: .625rem;
+                    float: left; 
+                    font-size: 0.75rem;
+                                        }
+            .center-in-center{   
+                position: absolute;   
+                top: 50%;   
+                left: 50%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .center-in-r{   
+                position: absolute;   
+                top: 30%;   
+                left: 70%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .is-right {
+                width: auto;
+                margin-right: 10px;
+            }
+            
+        </style>   
+        <style type="text/css">
+            .img1{ position: fixed; top: 200px; left:-130px}
+        </style>
     </head>
     <body>
         <h1 align="center">商品页面</h1>
-        <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-            <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
-            <h4>{{ item['gname'] }}</h4>
-            <p class="info">
-                <span class="marks hotsale-hide"></span>
-                <span class="price"><em>¥</em>{{item['gprice']}}</span>
-                <span class="price"><em>库存量</em>{{item['gsale']}}</span>
-            </p>
+        <div class="bg-white">
+            <div class="center-in-center inner">
+                <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                    
+                    <div class="inner">
+                    <h2>{{ item['gname'] }}</h2>
+                        <div class="inner">
+                            <img align="center" src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+                        </div>
+                        <p class="info">
+                            <span class="marks hotsale-hide"></span>
+                            <span style="font-size:20px;" class="price"><em>¥</em>{{item['gprice']}}</span>
+                            <span style="font-size:20px;" class="price"><em>库存量</em>{{item['gsale']}}</span>
+                        </p>
+                    </div>
+                
+                <form action="{{ url_for('add2cart',gno=item['gno']) }}" method="post">
+                    <label style="font-size:20px;" for='itemsale'>购买:</label>
+                    <input style="font-size:20px;"  type='text' id='num' name='num' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
+                    <input style="font-size:20px;" type='submit' value='添加至购物车'>
+                
+                </form>
+                </div>
+            </div>
+            <div class='center-in-r  is-right'>
+                <h1 >评论</h1>
+                <div style="font-size:20px;">
+                {% if comments %}
+                    {% for comment in comments %}
+                    
+                        {{comment["vipname"]}} {{comment["orderdate"]}} 
+                        {{comment["gcomment"]}}<br>
+                        
+                    {% endfor %}
+                {% endif %}
+            </div>
+            </div>
         </div>
-        <form action="{{ url_for('add2cart',gno=item['gno']) }}" method="post">
-            <label for='itemsale'>购买:</label>
-            <input type='text' id='num' name='num' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
-            <input type='submit' value='添加至购物车'>
-        </form>
-        <h1>评论</h1>
-        {% if comments %}
-            {% for comment in comments %}
-                {{comment["vipname"]}} {{comment["orderdate"]}} 
-                {{comment["gcomment"]}}<br>
-            {% endfor %}
-        {% endif %}
-        {% for message in get_flashed_messages() %}
-            {{ message }}
-        {% endfor %}
+        <div class="img1" >
+            <img src="{{ url_for('static', filename='amiya.png') }}"/>
+        </div>
+         {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
     </body>
+
 </html>

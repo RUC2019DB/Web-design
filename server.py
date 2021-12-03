@@ -187,7 +187,7 @@ def pay():
 
 
 if __name__ == '__main__':
-    db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库
+    db = dbQuery(dbIP='192.168.31.244',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库
     if db.ifconn:
         print("数据库连接成功")
         app.run()
