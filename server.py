@@ -153,6 +153,7 @@ def shoppingCart():
         cart = db.checkCart(username)
     return render_template("shoppingCart.html",cart=cart)
 
+
 @app.route("/deleteFromCart/?<int:gno>",methods=["GET","POST"])
 def deleteFromCart(gno):
     if request.method=="POST":
@@ -161,10 +162,8 @@ def deleteFromCart(gno):
     return redirect(url_for('shoppingCart'))
 
 
-
 @app.route("/pay",methods=["GET","POST"])
 def pay():
-    pay_Form = payForm()
     usertype = session.get("usertype")
     username = session.get("username")
     allPrice = 0
@@ -172,9 +171,10 @@ def pay():
     if usertype!="VIP":
         flash("请登录VIP账户")
     else:
-        allItem = db.checkCart(username)
-        for i in range(len(allItem)):
-            allPrice += allItem[i]["gprice"] * allItem[i]["gquantity"]
+        cart = db.checkCart(username)
+        for items in cart.values():
+            for item in items:
+                allPrice += item["gprice"] * item["gquantity"]
         if request.method == 'POST':
             if len(allItem)==0:
                 flash("购物车为空")
@@ -183,11 +183,11 @@ def pay():
                     return "付款成功"
                 else:
                     flash("订单有误,库存量不足")
-    return render_template("pay.html",pay_Form=pay_Form,allItem=allItem,allPrice=allPrice)
+    return render_template("pay.html",cart=cart,allPrice=allPrice)
 
 
 if __name__ == '__main__':
-    db = dbQuery(dbIP='192.168.31.244',dbusername='sa',dbpassword='123456',dbname='eStore')#数据库
+    db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
     if db.ifconn:
         print("数据库连接成功")
         app.run()

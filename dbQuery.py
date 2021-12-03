@@ -7,7 +7,6 @@ import time
 
 class dbQuery():
     def __init__(self,dbIP,dbusername,dbpassword,dbname):
-        self.conn = pymssql.connect(dbIP, dbusername, dbpassword, dbname, autocommit = True)
         try:
             self.conn = pymssql.connect(dbIP, dbusername, dbpassword, dbname, autocommit = True)#自动commit sql命令
         except:
@@ -42,11 +41,11 @@ class dbQuery():
         sql = "select count(*) vipnum from ruc.vip"
         self.cursor.execute(sql)
         vipnum = self.cursor.fetchone()["vipnum"]
-        sql = ("insert into ruc.vip values('%s',%d,'%s','%s','%s','%s','%s','%s')"
-                %(userInfo["username"], vipnum+1, hashkey,
+        sql = ("insert into ruc.vip values(%d,'%s','%s','%s','%s','%s','%s','%s',%d)"
+                %(vipnum+1, userInfo["username"], hashkey,
                   userInfo["birthdate"], userInfo["sex"],
                   userInfo["province"], userInfo["address"],
-                  userInfo["phone"]))
+                  userInfo["phone"], 0))
         try:
             self.cursor.execute(sql)
         except:
@@ -97,7 +96,7 @@ class dbQuery():
         result = self.cursor.fetchall()
         for i in range(len(result)):
             result[i]["gname"] = self.__toZH(result[i]["gname"])
-            result[i]["gsort"] = self.__toZH(result[i]["gsort"])
+            result[i]["gclass"] = self.__toZH(result[i]["gclass"])
             result[i]["gpic"] = self.__toZH(result[i]["gpic"])
         return result
 
@@ -110,30 +109,32 @@ class dbQuery():
         searchResult = self.cursor.fetchall()
         for i in range(len(searchResult)):
             searchResult[i]["gname"] = self.__toZH(searchResult[i]["gname"])
-            searchResult[i]["gsort"] = self.__toZH(searchResult[i]["gsort"])
+            searchResult[i]["gclass"] = self.__toZH(searchResult[i]["gclass"])
             searchResult[i]["gpic"] = self.__toZH(searchResult[i]["gpic"])
         return searchResult
 
 
     def getItem(self,gno):#获取编号为gno的商品信息
-        sql = "select * from ruc.goods where gno=%d"%(gno)
+        sql = "select * from ruc.goods g, ruc.store s where g.stno=s.stno and gno=%d"%(gno)
         try:
             self.cursor.execute(sql)
         except:
             return False
         itemInfo = self.cursor.fetchone()
         itemInfo["gname"] = self.__toZH(itemInfo["gname"])
-        itemInfo["gsort"] = self.__toZH(itemInfo["gsort"])
+        itemInfo["gclass"] = self.__toZH(itemInfo["gclass"])
         itemInfo["gpic"] = self.__toZH(itemInfo["gpic"])
+        itemInfo["stname"] = self.__toZH(itemInfo["stname"])
         return itemInfo
 
+
     def getComments(self,gno):#获取编号为gno的商品的评论
-        sql = "select vipname,gcomment,orderdate from ruc.orders o,ruc.vip p where o.vipno=p.vipno and gno=%d and gcomment is not NULL"%(gno)
+        sql = "select vipname,ascomment,asscore,orderdate from ruc.orders o,ruc.vip p where o.vipno=p.vipno and gno=%d and ascomment is not NULL"%(gno)
         self.cursor.execute(sql)
         comments = self.cursor.fetchall()
         if len(comments)>0:
             for i in range(len(comments)):
-                comments[i]["gcomment"] = self.__toZH(comments[i]["gcomment"])
+                comments[i]["ascomment"] = self.__toZH(comments[i]["ascomment"])
         return comments
 
 
@@ -159,9 +160,9 @@ class dbQuery():
     def add2cart(self,username,gno,num):#添加商品至购物车
         vipno = self.__getvipno(username)
 
-        sql = "select gsale from ruc.goods where gno=%d"%(gno)
+        sql = "select gstorage from ruc.goods where gno=%d"%(gno)
         self.cursor.execute(sql)
-        storage = self.cursor.fetchone()["gsale"]
+        storage = self.cursor.fetchone()["gstorage"]
 
         sql = "select * from ruc.cart where vipno=%d and gno=%d"%(vipno,gno)
         self.cursor.execute(sql)
@@ -191,33 +192,41 @@ class dbQuery():
     
     def checkCart(self,username):#查看购物车
         vipno = self.__getvipno(username)
-        sql = "select * from ruc.goods g, ruc.cart c where g.gno=c.gno and vipno=%d"%(vipno)
+        sql = "select gname,g.gno,gclass,gprice,s.stno,gstorage,gpic,vipno,gquantity,stname from ruc.goods g, ruc.cart c, ruc.store s where g.gno=c.gno and g.stno=s.stno and vipno=%d"%(vipno)
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
+        groupResult = {}
         for i in range(len(result)):
             result[i]["gname"] = self.__toZH(result[i]["gname"])
-            result[i]["gsort"] = self.__toZH(result[i]["gsort"])
-        return result
+            result[i]["gclass"] = self.__toZH(result[i]["gclass"])
+            result[i]["stname"] = self.__toZH(result[i]["stname"])
+            groupResult[result[i]["stname"]] = []
+        for i in range(len(result)):
+            groupResult[result[i]["stname"]].append(result[i])
+        return groupResult
 
 
     def generateOrder(self,username):#生成订单
         cart = self.checkCart(username)
-        for i in range(len(cart)):
-            if cart[i]["gquantity"]>cart[i]["gsale"]:
-                return False
+        for items in cart.values():
+            for item in items:
+                if item["gquantity"]>item["gstorage"]:
+                    return False
         vipno = self.__getvipno(username)
         ordertime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         sql = "select orderno from ruc.orders group by orderno"
         self.cursor.execute(sql)
-        orderno = len(self.cursor.fetchall()) + 1
-        for i in range(len(cart)):
-            #生成订单到orders表
-            sql = ("insert into ruc.orders(orderno, orderdate, vipno, gno, gprice, gstate, gquantity) values(%d,'%s',%d,%d,%f,'%s',%d)"
-                    %(orderno,ordertime,vipno,cart[i]["gno"],cart[i]["gprice"],"待发货",cart[i]["gquantity"]))
-            self.cursor.execute(sql)
-            #更新goods表中的库存量
-            sql = "update ruc.goods set gsale=gsale-%d where gno=%d"%(cart[i]["gquantity"],cart[i]["gno"])
-            self.cursor.execute(sql)
+        orderno = len(self.cursor.fetchall())
+        for items in cart.values():
+            orderno += 1 #购物车中属于同一个商家的商品生成一个订单
+            for item in items:
+                #生成订单到orders表
+                sql = ("insert into ruc.orders(orderno, orderdate, vipno, gno, gprice, gstate, gquantity) values(%d,'%s',%d,%d,%f,'%s',%d)"
+                        %(orderno,ordertime,vipno,item["gno"],item["gprice"],"待发货",item["gquantity"]))
+                self.cursor.execute(sql)
+                #更新goods表中的库存量
+                #sql = "update ruc.goods set gstorage=gstorage-%d where gno=%d"%(item["gquantity"],item["gno"])
+                #self.cursor.execute(sql)
         #删除购物车中的商品
         sql = "delete from ruc.cart where vipno=%d"%(vipno)
         self.cursor.execute(sql)

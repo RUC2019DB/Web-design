@@ -14,20 +14,17 @@
     
     <body>
         <h1 align="center">结算</h1>
-        {% if allItem %}
-            {% for item in allItem %}
-                {{item["gname"]}}  单价:{{item["gprice"]}}  数量:{{item["gquantity"]}}<br>
+        {% if cart %}
+            {% for store,items in cart.items() %}
+                <p style="font-size:20px;">{{store}}</p>
+                {% for item in items %}
+                    {{item["gname"]}}  单价:{{item["gprice"]}}  数量:{{item["gquantity"]}}<br>
+                {% endfor %}
             {% endfor%}
+            <br>
             总和:{{allPrice}}<br>
         {% endif %}
         <br>
-        <form method="post">
-            {{pay_Form.csrf_token()}}
-            {{pay_Form.receiver.label}}{{pay_Form.receiver}}<br>
-            {{pay_Form.phone.label}}{{pay_Form.phone}}<br>
-            {{pay_Form.address.label}}{{pay_Form.address}}<br>
-            {{pay_Form.submit}}<br>
-        </form>
         {% for message in get_flashed_messages() %}
             {{ message }}
         {% endfor %}
