@@ -16,7 +16,6 @@ class dbQuery():
             self.ifconn = True
             self.cursor = self.conn.cursor(as_dict=True)#查询结果设置为字典形式
             
-
     def __hash(self,str):#哈希函数，用于密码加密
         hash = hashlib.md5()
         hash.update(str.encode('utf-8'))
@@ -26,7 +25,7 @@ class dbQuery():
     def __toZH(self,str):#解决数据库查询时中文显示乱码的问题
         return str.encode('latin-1').decode('gbk')
 
-    def __getvipno(self,username):
+    def __getvipno(self,username):#给定用户名，查询用户编号
         vipno = 0
         sql = "select vipno from ruc.vip where vipname='%s'"%(username)
         try:
@@ -89,7 +88,7 @@ class dbQuery():
         else:
             return False
 
-    def randomItems(self,num):
+    def randomItems(self,num):#随机选择一批商品
         sql = "select top %d * from ruc.goods order by newid()"%(num)
         try:
             self.cursor.execute(sql)
@@ -128,7 +127,7 @@ class dbQuery():
         itemInfo["gpic"] = self.__toZH(itemInfo["gpic"])
         return itemInfo
 
-    def getComments(self,gno):
+    def getComments(self,gno):#获取编号为gno的商品的评论
         sql = "select vipname,gcomment,orderdate from ruc.orders o,ruc.vip p where o.vipno=p.vipno and gno=%d and gcomment is not NULL"%(gno)
         self.cursor.execute(sql)
         comments = self.cursor.fetchall()
@@ -138,7 +137,7 @@ class dbQuery():
         return comments
 
 
-    def postItem(self,username,item,itempic):
+    def postItem(self,username,item,itempic):#发布商品
         sql = "select count(*) itemnum from ruc.goods"
         self.cursor.execute(sql)
         itemnum = self.cursor.fetchone()["itemnum"]
@@ -157,7 +156,7 @@ class dbQuery():
             return True
 
     
-    def add2cart(self,username,gno,num):
+    def add2cart(self,username,gno,num):#添加商品至购物车
         vipno = self.__getvipno(username)
 
         sql = "select gsale from ruc.goods where gno=%d"%(gno)
@@ -184,13 +183,13 @@ class dbQuery():
         else:
             return True
 
-    def deleteFromCart(self,username,gno):
+    def deleteFromCart(self,username,gno):#从购物车删除商品
         vipno = self.__getvipno(username)
         sql = "delete from ruc.cart where vipno=%d and gno=%d"%(vipno,gno)
         self.cursor.execute(sql)
 
     
-    def checkCart(self,username):
+    def checkCart(self,username):#查看购物车
         vipno = self.__getvipno(username)
         sql = "select * from ruc.goods g, ruc.cart c where g.gno=c.gno and vipno=%d"%(vipno)
         self.cursor.execute(sql)
@@ -201,7 +200,7 @@ class dbQuery():
         return result
 
 
-    def generateOrder(self,username):
+    def generateOrder(self,username):#生成订单
         cart = self.checkCart(username)
         for i in range(len(cart)):
             if cart[i]["gquantity"]>cart[i]["gsale"]:
@@ -219,12 +218,7 @@ class dbQuery():
             #更新goods表中的库存量
             sql = "update ruc.goods set gsale=gsale-%d where gno=%d"%(cart[i]["gquantity"],cart[i]["gno"])
             self.cursor.execute(sql)
+        #删除购物车中的商品
         sql = "delete from ruc.cart where vipno=%d"%(vipno)
         self.cursor.execute(sql)
         return True
-
-
-            
-
-
-        
