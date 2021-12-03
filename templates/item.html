@@ -5,11 +5,11 @@
         <style>
             body 
             {
-                background-image:url("{{ url_for('static', filename='bgBlueSky.jfif') }}");
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
                 background-repeat:no-repeat;
                 background-position:center top;
                 background-attachment: fixed;
-                background-size: auto;
+                background-size:cover ;
             }
            
         </style>
@@ -93,7 +93,7 @@
             </div>
             <div class='center-in-r  is-right'>
                 <h1 >评论</h1>
-                <div style="font-size:20px;">
+                <div style="font-size:25px;">
                 {% if comments %}
                     {% for comment in comments %}
                     
