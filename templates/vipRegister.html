@@ -1,10 +1,69 @@
 <html>
     <head>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
+        <style type="text/css">   
+     
+            *{   
+                margin: 0;   
+                padding: 0; 
+            }  
+            
+            .bg-white {
+                background: #fff;
+            } 
+            .inner{
+                     width:50%
+                    }
+            .inner-title {
+                    padding-left: .25rem;
+                    padding-right: .25rem;
+                    padding-top: .625rem;
+                    padding-bottom: .625rem;
+                    float: left; 
+                    font-size: 0.75rem;
+                                        }
+            .center-in-center{   
+                position: absolute;   
+                top: 40%;   
+                left: 30%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .center-in-r{   
+                position: absolute;   
+                top: 30%;   
+                left: 70%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .is-right {
+                width: auto;
+                margin-right: 10px;
+            }
+            
+        </style> 
     </head>
     <body>
         <h1 align="center">注册用户</h1>
-        <div>
-            <form method="post">
+
+        <div style="font-size:25px;" class="center-in-center">
+            <form style="font-size:25px;" method="post">
                 {{vipRegister_Form.csrf_token()}}
                 {{vipRegister_Form.username.label}}{{vipRegister_Form.username}}<br>
                 {{vipRegister_Form.password1.label}}{{vipRegister_Form.password1}}<br>

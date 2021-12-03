@@ -1,27 +1,85 @@
 <html>
     <head>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
+        <style type="text/css">   
+     
+            *{   
+                margin: 0;   
+                padding: 0; 
+            }  
+            
+            .bg-white {
+                background: #fff;
+            } 
+            .inner{
+                     width:50%
+                    }
+            .inner-title {
+                    padding-left: .25rem;
+                    padding-right: .25rem;
+                    padding-top: .625rem;
+                    padding-bottom: .625rem;
+                    float: left; 
+                    font-size: 0.75rem;
+                                        }
+            .center-in-center{   
+                position: absolute;   
+                top: 40%;   
+                left: 30%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .center-in-r{   
+                position: absolute;   
+                top: 30%;   
+                left: 70%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .is-right {
+                width: auto;
+                margin-right: 10px;
+            }
+            
+        </style>  
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     </head>
     <body>
         <h1 align="center">发布商品</h1>
-        <div>
+        <div  style="font-size:25px;" class="center-in-center">
             <form action="{{ url_for('postItem') }}" method="POST" enctype="multipart/form-data">
-                <label for='itemname'>商品名称:</label>
-                <input type='text' id='itemname' name='itemname'><br>
+                <label style="font-size:25px;" for='itemname'>商品名称:</label>
+                <input style="font-size:25px;" type='text' id='itemname' name='itemname'><br>
 
-                <label for='itemsort'>商品类型:</label>
-                <input type='text' id='itemsort' name='itemsort'><br>
+                <label style="font-size:25px;" for='itemsort'>商品类型:</label>
+                <input style="font-size:25px;" type='text' id='itemsort' name='itemsort'><br>
 
-                <label for='itemprice'>商品价格:</label>
-                <input type='text' id='itemprice' name='itemprice' onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')"><br>
+                <label style="font-size:25px;" for='itemprice'>商品价格:</label>
+                <input style="font-size:25px;" type='text' id='itemprice' name='itemprice' onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')"><br>
 
-                <label for='itemsale'>商品库存量:</label>
-                <input type='text' id='itemsale' name='itemsale' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
+                <label style="font-size:25px;" for='itemsale'>商品库存量:</label>
+                <input style="font-size:25px;" type='text' id='itemsale' name='itemsale' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
 
-                <label for='itempic'>商品图片:</label>
-                <input type="file" id='itempic' name="itempic" accept=".jpg,.png"/><br>
+                <label style="font-size:25px;" for='itempic'>商品图片:</label>
+                <input style="font-size:25px;" type="file" id='itempic' name="itempic" accept=".jpg,.png"/><br>
 
-                <input type='submit' value='上传'>
+                <input style="font-size:25px;" type='submit' value='上传'>
             </form>
             {% for message in get_flashed_messages() %}
                 {{ message }}
