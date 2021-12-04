@@ -3,16 +3,7 @@
     <head>
         <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
         <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
-        <script>
-            $(function () //当网页回退时自动刷新一次
-            {
-                window.onpageshow = function (event) {
-                    if (event.persisted) {
-                        window.location.reload();
-                    }
-                }
-            });
-        </script>
+        <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
         <script>
             function checkAccount()
             {
@@ -64,11 +55,20 @@
             <a id="storeRegister" href="{{ url_for('storeRegister') }}">
                 <button>商家注册</button>
             </a>
+            <a id="vipPage" href="{{ url_for('vipPage') }}">
+                <button>我的主页</button>
+            </a>
+            <a id="storePage" href="{{ url_for('storePage') }}">
+                <button>我的店铺</button>
+            </a>
             <a id="postItem" href="{{ url_for('postItem') }}">
                 <button>发布商品</button>
             </a>
             <a id="shoppingCart" href="{{ url_for('shoppingCart') }}">
                 <button>购物车</button>
+            </a>
+            <a id="charge" href="{{ url_for('charge') }}">
+                <button>氪!</button>
             </a>
             <p id='greeting' style='display:inline'></p>
         </div>

@@ -24,6 +24,10 @@
             <br>
             总和:{{allPrice}}<br>
         {% endif %}
+        <h1>一经付款,概不退货!</h1><br>
+        <form action="{{ url_for('pay') }}" method="POST">
+            <input style="font-size:25px;" type='submit' value='支付'>
+        </form>
         <br>
         {% for message in get_flashed_messages() %}
             {{ message }}

@@ -68,6 +68,55 @@ class dbQuery():
         else:
             return True
 
+    
+    def vipInfo(self,username):
+        sql = "select vipname,vipdate,vipsex,province,address,vipphone,vipmoney from ruc.vip where vipname='%s'"%(username)
+        self.cursor.execute(sql)
+        vipInfo = self.cursor.fetchone()
+        vipInfo["vipsex"] = self.__toZH(vipInfo["vipsex"])
+        vipInfo["province"] = self.__toZH(vipInfo["province"])
+        vipInfo["address"] = self.__toZH(vipInfo["address"])
+        return vipInfo
+
+
+    def updateInfo(self,newInfo,username):
+        sql = ("update ruc.vip set vipdate='%s',vipsex='%s',province='%s',address='%s',vipphone='%s' where vipname='%s'"
+                %(newInfo["birthdate"], newInfo["sex"], 
+                    newInfo["province"], newInfo["address"], 
+                    newInfo["phone"], username))
+        try:
+            self.cursor.execute(sql)
+        except:
+            return False
+        else:
+            return True
+
+    
+    def vipViewOrders(self,username,gstate):
+        vipno = self.__getvipno(username)
+        sql = ("select * from ruc.orders o,ruc.goods g where o.gno=g.gno and vipno=%d and gstate='%s' order by orderdate"
+                %(vipno,gstate))
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        for i in range(len(result)):
+            result[i]["gstate"] = self.__toZH(result[i]["gstate"])
+            result[i]["gpic"] = self.__toZH(result[i]["gpic"])
+            result[i]["gname"] = self.__toZH(result[i]["gname"])
+            if len(result[i]["ascomment"])>0:
+                result[i]["ascomment"] = self.__toZH(result[i]["ascomment"])
+        return result
+
+
+    def comfirmReceipt(self,orderno,gno):
+        sql = "update ruc.orders set gstate='已收货' where orderno=%d and gno=%d"(orderno,gno)
+        self.cursor.execute(sql)
+    
+
+    def giveComment(self,orderno,gno,score,comment):
+        asdate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        sql = ("update ruc.order set gstate='已完成',asdate='%s',ascomment='%s',asscore=%d where orderno=%d and gno=%d"
+               %(asdate,comment,score,orderno,gno))
+        self.cursor.execute(sql)
 
     def checkPassword(self,usertype,username,password):#密码验证
         hashkey = self.__hash(password)
@@ -87,6 +136,17 @@ class dbQuery():
         else:
             return False
 
+    
+    def charge(self,username,money):#充值
+        vipno = self.__getvipno(username)
+        sql = "update ruc.vip set vipmoney=vipmoney+%d where vipno=%d"%(money,vipno)
+        try:
+            self.cursor.execute(sql)
+        except:
+            return False
+        else:
+            return True
+
     def randomItems(self,num):#随机选择一批商品
         sql = "select top %d * from ruc.goods order by newid()"%(num)
         try:
@@ -99,6 +159,7 @@ class dbQuery():
             result[i]["gclass"] = self.__toZH(result[i]["gclass"])
             result[i]["gpic"] = self.__toZH(result[i]["gpic"])
         return result
+
 
     def searchItems(self,searchKeyWord):#搜索商品
         sql = "select * from ruc.goods where gname like \'" + '%' + "%s"%(searchKeyWord) + "%\'"
@@ -183,6 +244,7 @@ class dbQuery():
             return False
         else:
             return True
+
 
     def deleteFromCart(self,username,gno):#从购物车删除商品
         vipno = self.__getvipno(username)

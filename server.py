@@ -3,12 +3,17 @@ from flask import Flask,render_template,request,flash,redirect,session
 from flask.helpers import url_for
 from dbQuery import *
 from Form import *
+import socket
 import os
+#获取计算机名称
 
 #服务器
 app = Flask(__name__)
 app.secret_key = "sdfha1561"#数据加密密钥
 app.config['JSON_AS_ASCII'] = False
+
+hostname = socket.gethostname()
+serverIP= socket.gethostbyname(hostname)
 
 @app.route('/',methods=['GET','POST'])
 def home():
@@ -75,6 +80,88 @@ def storeRegister():
     return render_template("storeRegister.html",storeRegister_Form=storeRegister_Form)
 
 
+@app.route("/vipPage",methods=["GET","POST"])
+def vipPage():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='VIP':
+        return "请登录VIP账户"
+    else:
+        vipInfo = db.vipInfo(username)
+        return render_template("vip.html",vipInfo=vipInfo)
+
+
+@app.route("/updateInfo",methods=["GET","POST"])
+def updateInfo():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype=='VIP':
+        updateVip_form = vipRegisterForm()
+        if request.method=='POST':
+            newInfo = request.form.to_dict()
+            if db.updateInfo(newInfo,username):
+                flash("修改成功")
+            else:
+                flash("信息有误")
+        return render_template("updateInfo.html",updateVip_form=updateVip_form)
+    else:
+        return "请登录VIP账户"
+
+
+@app.route("/vipViewOrders/?<string:gstate>",methods=["GET","POST"])
+def vipViewOrders(gstate):
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='VIP':
+        return "请登录VIP账户"
+    else:
+        orders = db.vipViewOrders(username,gstate)
+        return render_template("vipViewOrders.html",orders=orders,gstate=gstate)
+
+
+@app.route("/comfirmReceipt/?<int:orderno>/?<int:gno>",methods=["GET","POST"])
+def comfirmReceipt(orderno,gno):
+    db.comfirmReceipt(orderno,gno)
+    return "确认成功"
+
+@app.route("/giveComment/?<int:orderno>/?<int:gno>",methods=["GET","POST"])
+def giveComment(orderno,gno):
+    comment_form = commentForm()
+    if request.method=='POST':
+        score = request.form.get("score")
+        comment = request.form.get("comment")
+        db.giveComment(orderno,gno,score,comment)
+        return redirect(url_for('vipPage'))
+    return render_template("giveComment.html",comment_form=comment_form)
+
+
+@app.route("/storePage",methods=["GET","POST"])
+def storePage():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='商家':
+        return "请登录商家账户"
+    else:
+        return render_template("vip.html")
+
+
+@app.route("/charge",methods=["GET","POST"])
+def charge():
+    charge_form = chargeForm()
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='VIP':
+        return "请登录VIP账户"
+    else:
+        if request.method == 'POST':
+            money = int(request.form.get("money"))
+            if db.charge(username,money):
+                flash("充值成功")
+            else:
+                flash("充值失败")
+        return render_template("charge.html",charge_form=charge_form)
+
+
 @app.route("/searchResult/?<string:searchKeyWord>",methods=["GET","POST"])
 def searchResult(searchKeyWord):
     result = db.searchItems(searchKeyWord)
@@ -99,12 +186,12 @@ def item(gno):
 
 @app.route("/postItem",methods=["GET","POST"])
 def postItem():
-    if request.method == "POST":
-        usertype = session.get("usertype")
-        username = session.get("username")
-        if usertype!='商家':
-            flash("商家请先登录")
-        else:
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='商家':
+        return "商家请先登录"
+    else:
+        if request.method == "POST":
             item = request.form.to_dict()
             itempic = request.files.get("itempic")
             if ((item["itemname"]=='')|(item["itemsort"]=='')|(itempic.filename=='')):
@@ -121,7 +208,7 @@ def postItem():
                         flash("上传成功!")
                     else:
                         flash("上传失败")
-    return render_template('postItem.html')
+        return render_template('postItem.html')
 
 
 @app.route("/add2cart/?<int:gno>",methods=["GET","POST"])
@@ -190,6 +277,6 @@ if __name__ == '__main__':
     db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
     if db.ifconn:
         print("数据库连接成功")
-        app.run()
+        app.run(host=serverIP,port='5000')
     else:
         print("数据库连接失败")
