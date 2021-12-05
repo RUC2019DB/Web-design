@@ -8,6 +8,7 @@
             function checkAccount()
             {
                 var un = {{username|tojson}}
+                var ut = {{usertype|tojson}}
                 if (un==null)
                 {
                     document.getElementById("signIn").innerHTML = "登录"
@@ -42,7 +43,7 @@
     </head>
 
     <body>
-        <h1 align="center">商店</h1>
+        <h1 align="center">商店</h1><p id='greeting' align="center"></p>
         <hr>
         <div style="position:fixed;float:right">
         <div class="topButton" style="position:relative;float:left;display:inline">
@@ -55,13 +56,14 @@
             <a id="storeRegister" href="{{ url_for('storeRegister') }}">
                 <button>商家注册</button>
             </a>
+            <br>
             <a id="vipPage" href="{{ url_for('vipPage') }}">
                 <button>我的主页</button>
             </a>
             <a id="storePage" href="{{ url_for('storePage') }}">
                 <button>我的店铺</button>
             </a>
-            <a id="postItem" href="{{ url_for('postItem') }}">
+            <a id="postItem" href="{{ url_for('postItem',postgno=0) }}">
                 <button>发布商品</button>
             </a>
             <a id="shoppingCart" href="{{ url_for('shoppingCart') }}">
@@ -70,7 +72,6 @@
             <a id="charge" href="{{ url_for('charge') }}">
                 <button>氪!</button>
             </a>
-            <p id='greeting' style='display:inline'></p>
         </div>
         <br>
         <hr>

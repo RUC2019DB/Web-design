@@ -96,6 +96,7 @@
             </a>
             <a id="storePage" href="{{ url_for('vipViewOrders',gstate='已完成') }}">
                 <button>已完成</button>
+            </a>
         </div>
         {% for message in get_flashed_messages() %}
             {{ message }}

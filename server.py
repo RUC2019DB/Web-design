@@ -5,7 +5,6 @@ from dbQuery import *
 from Form import *
 import socket
 import os
-#获取计算机名称
 
 #服务器
 app = Flask(__name__)
@@ -121,8 +120,15 @@ def vipViewOrders(gstate):
 
 @app.route("/comfirmReceipt/?<int:orderno>/?<int:gno>",methods=["GET","POST"])
 def comfirmReceipt(orderno,gno):
-    db.comfirmReceipt(orderno,gno)
-    return "确认成功"
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='VIP':
+        return "请登录VIP账户"
+    else:
+        if db.comfirmReceipt(username,orderno,gno):
+            return "确认成功"
+        else:
+            return "确认失败"
 
 @app.route("/giveComment/?<int:orderno>/?<int:gno>",methods=["GET","POST"])
 def giveComment(orderno,gno):
@@ -142,8 +148,33 @@ def storePage():
     if usertype!='商家':
         return "请登录商家账户"
     else:
-        return render_template("vip.html")
+        storeInfo = db.storeInfo(username)
+        items = db.storeViewItems(username)
+        return render_template("store.html",storeInfo=storeInfo,items=items)
 
+
+@app.route("/storeViewOrders/?<string:gstate>",methods=["GET","POST"])
+def storeViewOrders(gstate):
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='商家':
+        return "请登录商家账户"
+    else:
+        orders = db.storeViewOrders(username,gstate)
+        return render_template("storeViewOrders.html",orders=orders,gstate=gstate)
+
+
+@app.route("/deliver/?<int:orderno>/?<int:gno>",methods=["GET","POST"])
+def deliver(orderno,gno):
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='商家':
+        return "请登录商家账户"
+    else:
+        if db.deliver(username,orderno,gno):
+            return "发货成功"
+        else:
+            return "发货失败"
 
 @app.route("/charge",methods=["GET","POST"])
 def charge():
@@ -184,31 +215,43 @@ def item(gno):
     return render_template("item.html",item=item,comments=comments)
 
 
-@app.route("/postItem",methods=["GET","POST"])
-def postItem():
+@app.route("/postItem/?<int:postgno>",methods=["GET","POST"])
+def postItem(postgno):
     usertype = session.get("usertype")
     username = session.get("username")
     if usertype!='商家':
         return "商家请先登录"
     else:
+        if postgno==0:
+            title = "发布商品"
+        else:
+            title = "更新商品(请填写需要修改的部分)"
         if request.method == "POST":
             item = request.form.to_dict()
-            itempic = request.files.get("itempic")
-            if ((item["itemname"]=='')|(item["itemsort"]=='')|(itempic.filename=='')):
-                flash("商品信息有误")
-            else:
-                try:
-                    item["itemprice"] = float(item["itemprice"])
-                    item["itemsale"] = int(item["itemsale"])
-                except:
+            itempic = request.files.get("gpic")
+            if postgno == 0:
+                if ((item["gname"]=='')|(item["gclass"]=='')|(itempic.filename=='')):
                     flash("商品信息有误")
                 else:
-                    if db.postItem(username,item,itempic):
-                        itempic.save(os.path.join('static/',itempic.filename))
-                        flash("上传成功!")
+                    try:
+                        item["gprice"] = float(item["gprice"])
+                        item["gstorage"] = int(item["gstorage"])
+                    except:
+                        flash("商品信息有误")
                     else:
-                        flash("上传失败")
-        return render_template('postItem.html')
+                        if db.postItem(username,item,itempic):
+                            itempic.save(os.path.join('static/',itempic.filename))
+                            flash("上传成功!")
+                        else:
+                            flash("上传失败")
+            else:
+                if db.updateItem(postgno,item,itempic):
+                    if len(itempic.filename):
+                        itempic.save(os.path.join('static/',itempic.filename))
+                    flash("上传成功!")
+                else:
+                    flash("上传失败")
+        return render_template('postItem.html',postgno=postgno,title=title)
 
 
 @app.route("/add2cart/?<int:gno>",methods=["GET","POST"])
@@ -254,7 +297,7 @@ def pay():
     usertype = session.get("usertype")
     username = session.get("username")
     allPrice = 0
-    allItem = None
+    cart = None
     if usertype!="VIP":
         flash("请登录VIP账户")
     else:
@@ -263,13 +306,10 @@ def pay():
             for item in items:
                 allPrice += item["gprice"] * item["gquantity"]
         if request.method == 'POST':
-            if len(allItem)==0:
+            if len(cart)==0:
                 flash("购物车为空")
             else:
-                if db.generateOrder(username):
-                    return "付款成功"
-                else:
-                    flash("订单有误,库存量不足")
+                return db.generateOrder(username)  
     return render_template("pay.html",cart=cart,allPrice=allPrice)
 
 

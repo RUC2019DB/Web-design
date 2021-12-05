@@ -44,7 +44,7 @@ class chargeForm(FlaskForm):
 class commentForm(FlaskForm):
     score = SelectField("评分",validators=[DataRequired('请选择')],
                                render_kw={'class':'form-control'},
-                               choices=[(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')],
+                               choices=[(1,1),(2,2),(3,3),(4,4),(5,5)],
                                default = 3,
                                coerce=int)
     comment = StringField("评论",validators=[DataRequired()])

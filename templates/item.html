@@ -70,7 +70,9 @@
         </style>
     </head>
     <body>
-        <h1 align="center">{{item['stname']}}</h1>
+        <a align="center" href="{{ url_for('searchResult',searchKeyWord=item['stname']) }}">
+            <h1>{{item['stname']}}</h1>
+        </a>
         <div class="bg-white">
             <div class="center-in-center inner">
                 <div class="item topButton" role="listitem" aria-posinset="2" aria-setsize="50">
@@ -83,7 +85,9 @@
                         <p class="info">
                             <span class="marks hotsale-hide"></span>
                             <span style="font-size:20px;" class="price"><em>¥</em>{{item['gprice']}}</span>
-                            <span style="font-size:20px;" class="price"><em>库存量</em>{{item['gstorage']}}</span>
+                            <span style="font-size:20px;" class="price"><em>库存量:</em>{{item['gstorage']}}</span>
+                            <span style="font-size:20px;" class="price"><em>评分:</em>{{item['avgscore']}}</span>
+                            <span style="font-size:20px;" class="price"><em>销量:</em>{{item['sale']}}</span>
                         </p>
                     </div>
                 
@@ -95,13 +99,14 @@
                 </div>
             </div>
             <div class='center-in-r  is-right'>
-                <h1 >评论</h1>
+                <h1 >评价</h1>
                 <div style="font-size:25px;">
                 {% if comments %}
                     {% for comment in comments %}
                     
-                        {{comment["vipname"]}} {{comment["orderdate"]}} 
-                        {{comment["ascomment"]}}<br>
+                        买家:{{comment["vipname"]}} 时间:{{comment["asdate"]}} 
+                        评分:{{comment["asscore"]}} <br>{{comment["ascomment"]}}<br>
+                        <br>
                         
                     {% endfor %}
                 {% endif %}

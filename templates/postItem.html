@@ -61,23 +61,23 @@
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     </head>
     <body>
-        <h1 align="center">发布商品</h1>
+        <h1 align="center">{{title}}</h1>
         <div  style="font-size:25px;" class="center-in-center">
-            <form action="{{ url_for('postItem') }}" method="POST" enctype="multipart/form-data">
-                <label style="font-size:25px;" for='itemname'>商品名称:</label>
-                <input style="font-size:25px;" type='text' id='itemname' name='itemname'><br>
+            <form action="{{ url_for('postItem',postgno=postgno) }}" method="POST" enctype="multipart/form-data">
+                <label style="font-size:25px;" for='gname'>商品名称:</label>
+                <input style="font-size:25px;" type='text' id='gname' name='gname'><br>
 
-                <label style="font-size:25px;" for='itemsort'>商品类型:</label>
-                <input style="font-size:25px;" type='text' id='itemsort' name='itemsort'><br>
+                <label style="font-size:25px;" for='gclass'>商品类型:</label>
+                <input style="font-size:25px;" type='text' id='gclass' name='gclass'><br>
 
-                <label style="font-size:25px;" for='itemprice'>商品价格:</label>
-                <input style="font-size:25px;" type='text' id='itemprice' name='itemprice' onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')"><br>
+                <label style="font-size:25px;" for='gprice'>商品价格:</label>
+                <input style="font-size:25px;" type='text' id='gprice' name='gprice' onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')"><br>
 
-                <label style="font-size:25px;" for='itemsale'>商品库存量:</label>
-                <input style="font-size:25px;" type='text' id='itemsale' name='itemsale' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
+                <label style="font-size:25px;" for='gstorage'>商品库存量:</label>
+                <input style="font-size:25px;" type='text' id='gstorage' name='gstorage' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
 
-                <label style="font-size:25px;" for='itempic'>商品图片:</label>
-                <input style="font-size:25px;" type="file" id='itempic' name="itempic" accept=".jpg,.png"/><br>
+                <label style="font-size:25px;" for='gpic'>商品图片:</label>
+                <input style="font-size:25px;" type="file" id='gpic' name="gpic" accept=".jpg,.png"/><br>
 
                 <input style="font-size:25px;" type='submit' value='上传'>
             </form>

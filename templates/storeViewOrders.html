@@ -65,6 +65,7 @@
             {% for item in orders %}
                 <h1 align="center"></h1>
                 <div class="item inner" role="listitem" aria-posinset="2" aria-setsize="50">
+                    <p style="display: inline;">买家:</p>{{item["vipname"]}}<br>
                     <a class="is-c" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
                         <img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
                     </a>
@@ -77,14 +78,12 @@
                         <span class="price"><em>¥ </em>{{item['gprice']}}</span>
                         <span class="price"><em>数量:</em>{{item['gquantity']}}</span>
                     </p>
-                    {% if gstate=='待收货' %}
-                        <a href="{{ url_for('comfirmReceipt',orderno=item['orderno'],gno=item['gno']) }}">
-                            <button>确认收货</button>
-                        </a>
+                    {% if item["ascomment"] %}
+                        {{item["asdate"]}} {{item["asscore"]}} {{item["ascomment"]}}<br>
                     {% endif %}
-                    {% if gstate=='待评价' %}
-                        <a href="{{ url_for('giveComment',orderno=item['orderno'],gno=item['gno']) }}">
-                            <button>评价</button>
+                    {% if gstate=='待发货' %}
+                        <a href="{{ url_for('deliver',orderno=item['orderno'],gno=item['gno']) }}">
+                            <button>发货</button>
                         </a>
                     {% endif %}
                 </div>
