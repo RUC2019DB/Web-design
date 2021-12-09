@@ -1,0 +1,153 @@
+ <!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
+        <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
+        <script>
+            function checkAccount()
+            {
+                var un = {{username|tojson}}
+                var ut = {{usertype|tojson}}
+                if (un==null)
+                {
+                    document.getElementById("signIn").innerHTML = "登录"
+                    document.getElementById("greeting").innerHTML = ""
+                }
+                else
+                {
+                    document.getElementById("signIn").innerHTML = "登出/切换账号"
+                    document.getElementById("greeting").innerHTML = "Hello! "+un+""
+                }
+            }
+            setInterval(checkAccount,100) 
+        </script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='logo_lungmen.png') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size: contain;
+            }
+            .topButton
+            {
+                z-index:1;
+                position: fixed;
+            }
+        </style>
+        <style type="text/css">
+            .img1{ position: fixed; top: 225px; right:-5px}
+        </style>
+    </head>
+
+    <body>
+        <h1 align="center">商店</h1><p id='greeting' align="center"></p>
+        <hr>
+        <div style="position:fixed;float:right">
+        <div class="topButton" style="position:relative;float:left;display:inline">
+            <a href="{{ url_for('signIn') }}">
+                <button id="signIn">登录</button>
+            </a>
+            <a id="vipRegister" href="{{ url_for('vipRegister') }}">
+                <button>VIP注册</button>
+            </a>
+            <a id="storeRegister" href="{{ url_for('storeRegister') }}">
+                <button>商家注册</button>
+            </a>
+            <br>
+            <a id="vipPage" href="{{ url_for('vipPage') }}">
+                <button>我的主页</button>
+            </a>
+            <a id="storePage" href="{{ url_for('storePage') }}">
+                <button>我的店铺</button>
+            </a>
+            <a id="postItem" href="{{ url_for('postItem',postgno=0) }}">
+                <button>发布商品</button>
+            </a>
+            <a id="shoppingCart" href="{{ url_for('shoppingCart') }}">
+                <button>购物车</button>
+            </a>
+            <a id="charge" href="{{ url_for('charge') }}">
+                <button>氪!</button>
+            </a>
+        </div>
+        <br>
+        <br>
+        <br>
+        <hr>
+       
+        <div style="display:inline;position:relative">
+            <form method="post" action="{{ url_for('search') }}">
+                {{search_Form.csrf_token()}}
+                {{search_Form.searchKeyWord.label}}{{search_Form.searchKeyWord}}{{search_Form.submit}}
+            </form>
+        </div>
+
+        <hr>
+        <br>
+        <div data-spm-ab="main">
+            <ul class="service-bd" role="menubar">
+            
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >武器</i>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li>
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >防具</i>
+                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span>
+                    <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li> 
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >药品及食物</i>
+                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span>
+                        <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span>
+                        <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                </li>
+            </ul>
+        </div>
+        </div>
+        <div class="img1" >
+            <img src="{{ url_for('static', filename='amiya.png') }}"/>
+        </div>
+        <div align="center" >
+            
+            
+            
+             
+    
+                {% for item in randomItems %}
+              
+                    <div>
+                        <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                          
+                            <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                                   
+                                  <table  width="850" border="1">   
+                                    <td><img src="{{ url_for('static', filename=item['gpic']) }}"  width="115" height="115"></td>
+                                    
+                                <td><h3>{{ item['gname'] }}</h3></td>
+                                <td>
+                                <p style="font-size:20px" class="info">
+                                    <span class="marks hotsale-hide"></span>
+                                    <span class="price"><em>¥ </em>{{item['gprice']}}</span>
+                                </p></td>
+                                 </table>
+                            </a>
+                          
+                                
+
+                        
+                        </div>
+                    </div> 
+                {% endfor %}
+              
+              </div>
+    </body>
+</html> 
+
+
