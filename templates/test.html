@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
+        <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
+        <script>
+            function checkAccount()
+            {
+                var un = {{username|tojson}}
+                var ut = {{usertype|tojson}}
+                if (un==null)
+                {
+                    document.getElementById("signIn").innerHTML = "登录"
+                    document.getElementById("greeting").innerHTML = ""
+                }
+                else
+                {
+                    document.getElementById("signIn").innerHTML = "登出/切换账号"
+                    document.getElementById("greeting").innerHTML = "Hello! "+un+""
+                }
+            }
+            setInterval(checkAccount,100) 
+        </script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='logo_lungmen.png') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size: contain;
+            }
+            .topButton
+            {
+                z-index:1;
+                position: fixed;
+            }
+        </style>
+        <style type="text/css">
+            .img1{ position: fixed; top: 225px; right:-5px}
+        </style>
+    </head>
+
+    <body>
+<div align="center" >
+            
+             
+    <table border="1"> 
+  {% for item in randomItems %}
+      <div>
+          <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+              <tr onclick="{{ url_for('item',gno=item['gno']) }}"></tr>
+              <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                     
+                      
+                      <td><img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215"></td>
+                      
+                  <td><h4>{{ item['gname'] }}</h4></td>
+                  
+                  
+              </a>
+            </tr> 
+          <tr>
+              <td>
+                  <p class="info">
+                      <span class="marks hotsale-hide"></span>
+                      <span class="price"><em>¥ </em>{{item['gprice']}}</span>
+                  </p>
+              </td>
+          </tr>
+          
+          </div>
+      </div> 
+  {% endfor %}
+ </table>
+</div>
+</body>
+</html>
