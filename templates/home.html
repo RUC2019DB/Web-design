@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
     <head>
         <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
@@ -74,8 +74,10 @@
             </a>
         </div>
         <br>
+        <br>
+        <br>
         <hr>
-        <!-- h1是水平线 -->
+       
         <div style="display:inline;position:relative">
             <form method="post" action="{{ url_for('search') }}">
                 {{search_Form.csrf_token()}}
@@ -93,19 +95,19 @@
                     <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span>
                     <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span>
                     <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-                </li> <!-- 这里面的链接需要改一下-->
+                </li>
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
                 <i aria-hidden="true" >防具</i>
                     <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span>
                     <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span>
                     <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-                </li> <!-- 这里面的链接需要改一下-->
+                </li> 
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
                 <i aria-hidden="true" >药品及食物</i>
                         <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span>
                         <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span>
                         <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
-                </li> <!-- 这里面的链接需要改一下-->
+                </li>
             </ul>
         </div>
         </div>
@@ -113,23 +115,39 @@
             <img src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
         <div align="center" >
-            {% for item in randomItems %}
-                <h1 align="center"></h1>
-                <div>
-                    <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-                        <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
-                            
-                                <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
-                            
-                            <h4>{{ item['gname'] }}</h4>
-                        </a>
-                        <p class="info">
-                            <span class="marks hotsale-hide"></span>
-                            <span class="price"><em>¥ </em>{{item['gprice']}}</span>
-                        </p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+            
+            
+            
+             
+    
+                {% for item in randomItems %}
+              
+                    <div>
+                        <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                          
+                            <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                                   
+                                  <table  width="850" border="1">   
+                                    <td><img src="{{ url_for('static', filename=item['gpic']) }}"  width="115" height="115"></td>
+                                    
+                                <td><h3>{{ item['gname'] }}</h3></td>
+                                <td>
+                                <p style="font-size:20px" class="info">
+                                    <span class="marks hotsale-hide"></span>
+                                    <span class="price"><em>¥ </em>{{item['gprice']}}</span>
+                                </p></td>
+                                 </table>
+                            </a>
+                          
+                                
+
+                        
+                        </div>
+                    </div> 
+                {% endfor %}
+              
+              </div>
     </body>
-</html>
+</html> 
+
+

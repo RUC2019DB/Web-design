@@ -60,24 +60,31 @@
     </head>
     <body>
         
-        <div class='center-in-center'>
+        <div align="center" >
             {% for item in result%}
-                <h1 align="center"></h1>
-                <div class="item inner" role="listitem" aria-posinset="2" aria-setsize="50">
-                    <a class="is-c" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                
+                <div >
+                   <table  width="850" border="1">   
+                    <td>
+                    <a  href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
                         
                         <img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
                         
                       
                     </a>
-                    <a class="is-right" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                    </td>
+                    <td>
+                    <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
                 
-                        <span style="font-size:15px;width: 5px;" class="inner">{{ item['gname'] }}</span>
-                    </a>
-                    <p class="info">
+                        <span style="font-size:15px;width: 20px;" class="inner">{{ item['gname'] }}</span>
+                    </a></td>
+                    <td>
+                    <p style="font-size:20px" class="info">
                         <span class="marks hotsale-hide"></span>
                         <span class="price"><em>¥ </em>{{item['gprice']}}</span>
-                    </p>
+                    </p></td>
+                </table>
+                   
                 </div>
             {% endfor %}
         </div>
