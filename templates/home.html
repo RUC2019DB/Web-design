@@ -3,18 +3,18 @@
     <head>
        
         <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.0.min.js') }}"></script>
-  <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.min.js') }}"></script>
- <script>
- L2Dwidget.init({"display": {
-  "superSample": 2,
-  "width": 200,
-  "height": 400,
- "position": "left",
-  "hOffset": 0,
- "vOffset": 0
-  }
-  });
-  </script>
+        <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.min.js') }}"></script>
+        <script>
+        L2Dwidget.init({"display": {
+        "superSample": 2,
+        "width": 200,
+        "height": 400,
+        "position": "left",
+        "hOffset": 0,
+        "vOffset": 0
+        }
+        });
+        </script>
         <script>
             window.onload = function(){ 
                  var audio = document.getElementById('music');
@@ -150,11 +150,7 @@
             <img id="'musicImg'" onClick="play()" alt="user" src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
         <div align="center" >
-            
-            
-            
-             
-    
+
                 {% for item in randomItems %}
               
                     <div>
@@ -173,10 +169,7 @@
                                 </p></td>
                                  </table>
                             </a>
-                          
-                                
 
-                        
                         </div>
                     </div> 
                 {% endfor %}
@@ -184,5 +177,4 @@
               </div>
     </body>
 </html> 
-
 
