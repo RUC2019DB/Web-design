@@ -1,80 +1,16 @@
-
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
     <head>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
-        <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
-        <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
-        <script>
-            function checkAccount()
-            {
-                var un = {{username|tojson}}
-                var ut = {{usertype|tojson}}
-                if (un==null)
-                {
-                    document.getElementById("signIn").innerHTML = "登录"
-                    document.getElementById("greeting").innerHTML = ""
-                }
-                else
-                {
-                    document.getElementById("signIn").innerHTML = "登出/切换账号"
-                    document.getElementById("greeting").innerHTML = "Hello! "+un+""
-                }
+        <title>Audio test</title>
+        <script type="text/javascript">
+            // @param filename The name of the file WITHOUT ending
+            function playSound(filename){   
+                document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename +'.mp3" /></audio>';
             }
-            setInterval(checkAccount,100) 
         </script>
-        <style>
-            body 
-            {
-                background-image:url("{{ url_for('static', filename='logo_lungmen.png') }}");
-                background-repeat:no-repeat;
-                background-position:center top;
-                background-attachment: fixed;
-                background-size: contain;
-            }
-            .topButton
-            {
-                z-index:1;
-                position: fixed;
-            }
-        </style>
-        <style type="text/css">
-            .img1{ position: fixed; top: 225px; right:-5px}
-        </style>
     </head>
-
     <body>
-<div align="center" >
-            
-             
-    <table border="1"> 
-  {% for item in randomItems %}
-      <div>
-          <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-              <tr onclick="{{ url_for('item',gno=item['gno']) }}"></tr>
-              <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
-                     
-                      
-                      <td><img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215"></td>
-                      
-                  <td><h4>{{ item['gname'] }}</h4></td>
-                  
-                  
-              </a>
-            </tr> 
-          <tr>
-              <td>
-                  <p class="info">
-                      <span class="marks hotsale-hide"></span>
-                      <span class="price"><em>¥ </em>{{item['gprice']}}</span>
-                  </p>
-              </td>
-          </tr>
-          
-          </div>
-      </div> 
-  {% endfor %}
- </table>
-</div>
-</body>
+        <button οnclick="playSound('bing');">Play</button>  
+        <div id="sound"></div>
+    </body>
 </html>

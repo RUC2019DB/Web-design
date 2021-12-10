@@ -64,15 +64,17 @@
     <body>
         <h1 align="center">评论</h1>
         <div  style="font-size:25px;" class="center-in-center">
-            <form method="POST" >
+            
+            <form style="font-size:30px;width:200px;height:100px" method="POST" >
                 {{comment_form.csrf_token()}}
-                {{comment_form.score.label}}{{comment_form.score}}<br>
-                {{comment_form.comment.label}}{{comment_form.comment}}<br>
-                {{comment_form.submit}}<br>
+                {{comment_form.score.label}}{{comment_form.score(style="width:50px;height:30px")}}<br>
+                {{comment_form.comment.label}}{{comment_form.comment(style="width:200px;height:50px")}}<br>
+                {{comment_form.submit(style="width:70px;height:40px")}}<br>
             </form>
             {% for message in get_flashed_messages() %}
                 {{ message }}
             {% endfor %}
+        
         </div>
     </body>
 </html>

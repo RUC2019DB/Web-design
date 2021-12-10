@@ -1,7 +1,41 @@
  <!DOCTYPE html>
 <html>
     <head>
+       
+        <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.0.min.js') }}"></script>
+  <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.min.js') }}"></script>
+ <script>
+ L2Dwidget.init({"display": {
+  "superSample": 2,
+  "width": 200,
+  "height": 400,
+ "position": "left",
+  "hOffset": 0,
+ "vOffset": 0
+  }
+  });
+  </script>
+        <script>
+            window.onload = function(){ 
+                 var audio = document.getElementById('music');
+                     
+            }
+            function play() {
+                var audio = document.getElementById('music');
+                if (audio.paused) {
+                    audio.play();
+                    document.getElementById('musicImg').src="{{ url_for('static', filename='amiya.png') }}";
+                }else{
+                    audio.pause();
+                    audio.currentTime = 0;//音乐从头播放
+                    document.getElementById('musicImg').src="{{ url_for('static', filename='amiya.png') }}";
+                }
+            }
+            </script>
+           
+
         <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
+        
         <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
         <script>
@@ -43,6 +77,7 @@
     </head>
 
     <body>
+        <audio id="music" src="D:\Arknight\m_sys_void_loop.wav" loop autoplay></audio>
         <h1 align="center">商店</h1><p id='greeting' align="center"></p>
         <hr>
         <div style="position:fixed;float:right">
@@ -112,7 +147,7 @@
         </div>
         </div>
         <div class="img1" >
-            <img src="{{ url_for('static', filename='amiya.png') }}"/>
+            <img id="'musicImg'" onClick="play()" alt="user" src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
         <div align="center" >
             
@@ -125,12 +160,12 @@
                     <div>
                         <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
                           
-                            <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
+                            <a style="width: 180px;" href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
                                    
                                   <table  width="850" border="1">   
-                                    <td><img src="{{ url_for('static', filename=item['gpic']) }}"  width="115" height="115"></td>
+                                    <td style="width: 180px;"><img src="{{ url_for('static', filename=item['gpic']) }}"  width="115" height="115"></td>
                                     
-                                <td><h3>{{ item['gname'] }}</h3></td>
+                                <td style="width: 500px;"><h3>{{ item['gname'] }}</h3></td>
                                 <td>
                                 <p style="font-size:20px" class="info">
                                     <span class="marks hotsale-hide"></span>

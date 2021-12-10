@@ -314,7 +314,7 @@ def pay():
 
 
 if __name__ == '__main__':
-    db = dbQuery(dbIP='10.46.250.137',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
+    db = dbQuery(dbIP='192.168.43.51',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
     if db.ifconn:
         print("数据库连接成功")
         app.run(host=serverIP,port='5000')

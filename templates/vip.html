@@ -38,7 +38,7 @@
             .center-in-center{   
                 position: absolute;   
                 top: 50%;   
-                left: 50%;   
+                left: 20%;   
                 -webkit-transform: translate(-50%, -50%);   
                 -moz-transform: translate(-50%, -50%);   
                 -ms-transform: translate(-50%, -50%);   
@@ -70,37 +70,42 @@
         </style>
     </head>
     <body>
-        <div>
-            <h1>我的个人信息</h1><br>
-            <p style="display: inline;">用户名:</p>{{vipInfo["vipname"]}}<br>
-            <p style="display: inline;">生日:</p>{{vipInfo["vipdate"]}}<br>
-            <p style="display: inline;">性别:</p>{{vipInfo["vipsex"]}}<br>
-            <p style="display: inline;">省份:</p>{{vipInfo["province"]}}<br>
-            <p style="display: inline;">地址:</p>{{vipInfo["address"]}}<br>
-            <p style="display: inline;">手机号码:</p>{{vipInfo["vipphone"]}}<br>
-            <p style="display: inline;">余额:</p>{{vipInfo["vipmoney"]}}<br>
+        <div class="center-in-center">
+            <div>
+                <h1>我的个人信息</h1><br>
+                <p style="display: inline;font-size:30px;">用户名:{{vipInfo["vipname"]}}</p><br>
+                <p style="display: inline;font-size:30px;">生日:{{vipInfo["vipdate"]}}</p><br>
+                <p style="display: inline;font-size:30px;">性别:{{vipInfo["vipsex"]}}</p><br>
+                <p style="display: inline;font-size:30px;">省份:{{vipInfo["province"]}}</p><br>
+                <p style="display: inline;font-size:30px;">地址:{{vipInfo["address"]}}</p><br>
+                <p style="display: inline;font-size:30px;">手机号码:{{vipInfo["vipphone"]}}</p><br>
+                <p style="display: inline;font-size:30px;">余额:{{vipInfo["vipmoney"]}}</p><br>
+            </div>
+            <a href="{{ url_for('updateInfo') }}">
+                <button style="font-size:20px;width:100px;height:60px" id="signIn">修改个人信息</button>
+            </a>
+            <br>
+            <br>
+            <br>
+            <h1>我的订单</h1>
+            <div>
+                <a  id="vipRegister" href="{{ url_for('vipViewOrders',gstate='待发货') }}">
+                    <button style="font-size:30px;width:100px;height:60px">待发货</button>
+                </a>
+                <a  id="storeRegister" href="{{ url_for('vipViewOrders',gstate='待收货') }}">
+                    <button style="font-size:30px;width:100px;height:60px">待收货</button>
+                </a>
+                <a  id="vipPage" href="{{ url_for('vipViewOrders',gstate='待评价') }}">
+                    <button style="font-size:30px;width:100px;height:60px">待评价</button>
+                </a>
+                <a  id="storePage" href="{{ url_for('vipViewOrders',gstate='已完成') }}">
+                    <button style="font-size:30px;width:100px;height:60px">已完成</button>
+                </a>
+            </div>
+            {% for message in get_flashed_messages() %}
+                {{ message }}
+            {% endfor %}
         </div>
-        <a href="{{ url_for('updateInfo') }}">
-            <button id="signIn">修改个人信息</button>
-        </a>
-        <h1>我的订单</h1>
-        <div>
-            <a id="vipRegister" href="{{ url_for('vipViewOrders',gstate='待发货') }}">
-                <button>待发货</button>
-            </a>
-            <a id="storeRegister" href="{{ url_for('vipViewOrders',gstate='待收货') }}">
-                <button>待收货</button>
-            </a>
-            <a id="vipPage" href="{{ url_for('vipViewOrders',gstate='待评价') }}">
-                <button>待评价</button>
-            </a>
-            <a id="storePage" href="{{ url_for('vipViewOrders',gstate='已完成') }}">
-                <button>已完成</button>
-            </a>
-        </div>
-        {% for message in get_flashed_messages() %}
-            {{ message }}
-        {% endfor %}
     </body>
 
 </html>

@@ -1,5 +1,8 @@
 <html>
     <head>
+
+
+
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
         <style>
@@ -47,8 +50,8 @@
             }   
             .center-in-r{   
                 position: absolute;   
-                top: 30%;   
-                left: 70%;   
+                top: 20%;   
+                left: 85%;   
                 -webkit-transform: translate(-50%, -50%);   
                 -moz-transform: translate(-50%, -50%);   
                 -ms-transform: translate(-50%, -50%);   
@@ -70,8 +73,8 @@
             .is-right {
                 width: auto;
                 margin-right: 10px;
-                top: 30%; 
-                left: 70%; 
+                top: 10%; 
+                left: 90%; 
             }
         </style>   
         <style type="text/css">
@@ -81,38 +84,46 @@
     <body>
         <div>
             <h1>店铺信息</h1><br>
-            <p style="display: inline;">店铺名:</p>{{storeInfo["stname"]}}<br>
-            <p style="display: inline;">地址:</p>{{storeInfo["staddress"]}}<br>
-            <p style="display: inline;">我的营业额:</p>{{storeInfo["profits"]}}<br>
+            <p style="display: inline;font-size:30px;">店铺名:{{storeInfo["stname"]}}</p><br>
+            <p style="display: inline;font-size:30px;">地址:{{storeInfo["staddress"]}}</p><br>
+            <p style="display: inline;font-size:30px;">我的营业额:{{storeInfo["profits"]}}</p><br>
         </div>
+        <div class='center-in-r'>
         <h1>收到的订单</h1>
-        <div>
+        
             <a id="vipRegister" href="{{ url_for('storeViewOrders',gstate='待发货') }}">
-                <button>待发货</button>
+                <button  style="font-size:20px;width:100px;height:60px">待发货</button>
             </a>
             <a id="storePage" href="{{ url_for('storeViewOrders',gstate='已发货') }}">
-                <button>已发货</button>
+                <button  style="font-size:20px;width:100px;height:60px">已发货</button>
             </a>
         </div>
-        <h1>我的商品</h1>
+        <h1 align="center">我的商品</h1>
         {% for item in items %}
-            <h1 align="center"></h1>
-            <div class="item inner" role="listitem" aria-posinset="2" aria-setsize="50">
+        
+            <div align="center"  role="listitem" aria-posinset="2" aria-setsize="50">
+                <table  width="850" border="1">   
                 <a class="is-c" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                    <img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
+                    <td style="width: 180px;"><img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
+                     </td>
                 </a>
                 <a class="is-right" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                    <span style="font-size:15px;width: 5px;" class="inner">{{ item['gname'] }}</span>
-                    
+                    <td style="width: 500px;">
+                    <span style="font-size:30px;width: 5px;" class="inner">{{ item['gname'] }}</span>
+                    </td>
                 </a>
-                <p class="info">
-                    <span class="marks hotsale-hide"></span>
-                    <span class="price"><em>¥ </em>{{item['gprice']}}</span>
-                    <span class="price"><em>库存量</em>{{item['gstorage']}}</span>
-                </p>
+                <td style="width: 180px;"> 
+                    <p class="info">
+                        <span style="font-size:30px;" class="marks hotsale-hide"></span>
+                        <span style="font-size:30px;" class="price"><em>¥ </em>{{item['gprice']}}</span>
+                        <span style="font-size:30px;" class="price"><em>库存量</em>{{item['gstorage']}}</span>
+                    </p>
+                </td>
+                <td style="width: 180px;">  
                 <a href="{{ url_for('postItem',postgno=item['gno']) }}">
-                    <button>修改商品信息</button>
+                    <button style="font-size:20px;width:100px;height:60px">修改商品信息</button>
                 </a>
+                 </td> 
             </div>
         {% endfor %}
         {% for message in get_flashed_messages() %}

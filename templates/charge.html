@@ -67,7 +67,7 @@
                 {{charge_form.money.label}}{{charge_form.money}}<br>
                 {{charge_form.cardID.label}}{{charge_form.cardID}}<br>
                 {{charge_form.password.label}}{{charge_form.password}}<br>
-                {{charge_form.submit}}
+                {{charge_form.submit(style="width:70px;height:40px")}}
             </form>
             {% for message in get_flashed_messages() %}
                 {{ message }}
