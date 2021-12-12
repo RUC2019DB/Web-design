@@ -278,10 +278,10 @@ def shoppingCart():
     usertype = session.get("usertype")
     username = session.get("username")
     if usertype!="VIP":
-        flash("请登录VIP账户")
+        return "请登录VIP账户"
     else:
         cart = db.checkCart(username)
-    return render_template("shoppingCart.html",cart=cart)
+        return render_template("shoppingCart.html",cart=cart)
 
 
 @app.route("/deleteFromCart/?<int:gno>",methods=["GET","POST"])
@@ -313,8 +313,40 @@ def pay():
     return render_template("pay.html",cart=cart,allPrice=allPrice)
 
 
+@app.route("/subscribe/?<int:stno>",methods=["GET","POST"])
+def subscribe(stno):
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        return "请登录VIP账户"
+    else:
+        db.subscribe(username,stno)
+        return "关注成功"
+
+
+@app.route("/mySubscribe",methods=["GET","POST"])
+def mySubscribe():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        return "请登录VIP账户"
+    else:
+        subscribeList = db.mySubscribe(username)
+        return render_template("mySubscribe.html",subscribeList=subscribeList)
+
+
+@app.route("/unSubscribe/?<int:stno>",methods=["GET","POST"])
+def unSubscribe(stno):
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        return "请登录VIP账户"
+    else:
+        db.unSubscribe(username,stno)
+        return redirect( url_for('mySubscribe') )
+
 if __name__ == '__main__':
-    db = dbQuery(dbIP='192.168.43.51',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
+    db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
     if db.ifconn:
         print("数据库连接成功")
         app.run(host=serverIP,port='5000')

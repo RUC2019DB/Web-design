@@ -407,3 +407,31 @@ class dbQuery():
         sql = "delete from ruc.cart where vipno=%d"%(vipno)
         self.cursor.execute(sql)
         return "购买成功"
+
+
+    def subscribe(self,username,stno):
+        vipno = self.__getvipno(username)
+        sql = "insert into ruc.subscribe values(%d,%d)"%(vipno,stno)
+        try:
+            self.cursor.execute(sql)
+        except:
+            pass
+
+
+    def mySubscribe(self,username):
+        vipno = self.__getvipno(username)
+        sql = "select * from ruc.store st, ruc.subscribe sub where st.stno=sub.stno and sub.vipno=%d"%(vipno)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        for i in range(len(result)):
+            result[i]["stname"] = self.__toZH(result[i]["stname"])
+        return result
+
+    
+    def unSubscribe(self,username,stno):
+        vipno = self.__getvipno(username)
+        sql = "delete from ruc.subscribe where vipno=%d and stno=%d"%(vipno,stno)
+        try:
+            self.cursor.execute(sql)
+        except:
+            pass

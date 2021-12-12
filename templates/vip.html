@@ -70,6 +70,9 @@
         </style>
     </head>
     <body>
+        <a href="{{ url_for('home') }}">
+            <button style="font-size:30px;width:100px;height:60px">主页</button>
+        </a>
         <div class="center-in-center">
             <div>
                 <h1>我的个人信息</h1><br>
@@ -102,6 +105,9 @@
                     <button style="font-size:30px;width:100px;height:60px">已完成</button>
                 </a>
             </div>
+            <a id="mySubscribe" href="{{ url_for('mySubscribe') }}">
+                <button style="font-size:30px;width:100px;height:60px">我的关注</button>
+            </a>
             {% for message in get_flashed_messages() %}
                 {{ message }}
             {% endfor %}

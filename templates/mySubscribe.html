@@ -1,6 +1,19 @@
 <html>
     <head>
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
+        
         <style type="text/css">   
      
             *{   
@@ -12,7 +25,7 @@
                 background: #fff;
             } 
             .inner{
-                     width: 150px;
+                     width:50%
                     }
             .inner-title {
                     padding-left: .25rem;
@@ -25,7 +38,7 @@
             .center-in-center{   
                 position: absolute;   
                 top: 50%;   
-                left: 50%;   
+                left: 20%;   
                 -webkit-transform: translate(-50%, -50%);   
                 -moz-transform: translate(-50%, -50%);   
                 -ms-transform: translate(-50%, -50%);   
@@ -42,53 +55,38 @@
                 -o-transform: translate(-50%, -50%);   
                 transform: translate(-50%, -50%);   
             }   
-            .is-c {
-                width: auto;
-                margin-right: 10px;
-                top: 30%; 
-                left: 50%; 
-            }
             .is-right {
                 width: auto;
                 margin-right: 10px;
-                top: 30%; 
-                left: 70%; 
             }
-            
-        </style>  
+            .topButton
+            {
+                z-index:1;
+
+            }
+        </style>   
+        <style type="text/css">
+            .img1{ position: fixed; top: 200px; left:-130px}
+        </style>
     </head>
     <body>
-        <a href="{{ url_for('home') }}">
-            <button style="font-size:30px;width:100px;height:60px">主页</button>
-        </a>
-        <div align="center" >
-            
-            {% for item in result%}
-                
-                <div >
-                   <table  width="850" border="1">   
-                    <td>
-                    <a  href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                        
-                        <img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
-                        
-                      
+        <h1 align="center">我的关注</h1>
+        <div class="center-in-center">
+            {% if subscribeList %}
+                {% for store in subscribeList %}
+                    <a href="{{ url_for('searchResult',searchKeyWord=store['stname']) }}">
+                        <h1>{{ store['stname'] }}</h1>
                     </a>
-                    </td>
-                    <td>
-                    <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                
-                        <span style="font-size:15px;width: 20px;" class="inner">{{ item['gname'] }}</span>
-                    </a></td>
-                    <td>
-                    <p style="font-size:20px" class="info">
-                        <span class="marks hotsale-hide"></span>
-                        <span class="price"><em>¥ </em>{{item['gprice']}}</span>
-                    </p></td>
-                </table>
-                   
-                </div>
+                    <a href="{{ url_for('unSubscribe',stno=store['stno']) }}">
+                        <button style="font-size:30px;width:100px;height:60px">取消关注</button>
+                    </a>
+                    <br>
+                {% endfor %}
+            {% endif %}
+            {% for message in get_flashed_messages() %}
+                {{ message }}
             {% endfor %}
         </div>
     </body>
+
 </html>

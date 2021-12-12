@@ -82,6 +82,9 @@
         </style>
     </head>
     <body>
+        <a href="{{ url_for('home') }}">
+            <button style="font-size:30px;width:100px;height:60px">主页</button>
+        </a>
         <div>
             <h1>店铺信息</h1><br>
             <p style="display: inline;font-size:30px;">店铺名:{{storeInfo["stname"]}}</p><br>

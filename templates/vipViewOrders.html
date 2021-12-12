@@ -60,10 +60,12 @@
         </style>  
     </head>
     <body>
-        <h1>{{gstate}}</h1>
+        <h1 align="center">{{gstate}}</h1>
+        <a href="{{ url_for('home') }}">
+            <button style="font-size:30px;width:100px;height:60px">主页</button>
+        </a>
         <div  align="center">
             {% for item in orders %}
-                <h1 align="center"></h1>
                 <div  align="center" role="listitem" aria-posinset="2" aria-setsize="50">
                     <table  width="850" border="1"> 
                         <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >

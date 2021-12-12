@@ -5,6 +5,9 @@
     </head>
     <body>
         <h1 align="center">购物车</h1>
+        <a href="{{ url_for('home') }}">
+            <button style="font-size:30px;width:100px;height:60px">主页</button>
+        </a>
         {% if cart %}
             {% for store,items in cart.items() %}
                 <p style="font-size:20px;">{{store}}</p>

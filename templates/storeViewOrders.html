@@ -60,7 +60,10 @@
         </style>  
     </head>
     <body>
-        <h1>{{gstate}}</h1>
+        <h1 align="center">{{gstate}}</h1>
+        <a href="{{ url_for('home') }}">
+            <button style="font-size:30px;width:100px;height:60px">主页</button>
+        </a>
         <div align="center" >
             {% for item in orders %}
                 
