@@ -1,37 +1,22 @@
  <!DOCTYPE html>
 <html>
     <head>
-       
-        <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.0.min.js') }}"></script>
-        <script charset="utf-8"  src="{{ url_for('static',filename='js/L2Dwidget.min.js') }}"></script>
         <script>
-        L2Dwidget.init({"display": {
-        "superSample": 2,
-        "width": 200,
-        "height": 400,
-        "position": "left",
-        "hOffset": 0,
-        "vOffset": 0
-        }
-        });
-        </script>
-        <script>
-            window.onload = function(){ 
-                 var audio = document.getElementById('music');
-                     
-            }
-            function play() {
+            function play() 
+            {
                 var audio = document.getElementById('music');
-                if (audio.paused) {
+                audio.volume = 0.1
+                if (audio.paused) 
+                {
                     audio.play();
-                    document.getElementById('musicImg').src="{{ url_for('static', filename='amiya.png') }}";
-                }else{
+                }
+                else
+                {
                     audio.pause();
                     audio.currentTime = 0;//音乐从头播放
-                    document.getElementById('musicImg').src="{{ url_for('static', filename='amiya.png') }}";
                 }
             }
-            </script>
+        </script>
            
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='logo_rhodes.png') }}">
@@ -74,10 +59,28 @@
         <style type="text/css">
             .img1{ position: fixed; top: 225px; right:-5px}
         </style>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/waifu.css') }}">
     </head>
 
     <body>
-        <audio id="music" src="D:\Arknight\m_sys_void_loop.wav" loop autoplay></audio>
+        <div class="waifu">
+            <div class="waifu-tips"></div>
+            <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+            <div class="waifu-tool">
+                <span class="fui-chat"></span>
+                <span class="fui-eye"></span>
+                <span class="fui-user"></span>
+                <span class="fui-photo"></span>
+                <span class="fui-info-circle"></span>
+                <span class="fui-cross"></span>
+            </div>
+        </div>
+        <script src="{{ url_for('static',filename='assets/waifu-tips.js') }}"></script>
+        <script src="{{ url_for('static',filename='assets/live2d.js') }}"></script>
+        <script type="text/javascript">initModel("static/assets/")</script>
+
+        <audio id="music" src="{{ url_for('static',filename='Happiness Breeze.mp3') }}" loop autoplay></audio>
+
         <h1 align="center">商店</h1><p id='greeting' align="center"></p>
         <hr>
         <div style="position:fixed;float:right">
@@ -147,7 +150,7 @@
         </div>
         </div>
         <div class="img1" >
-            <img id="'musicImg'" onClick="play()" alt="user" src="{{ url_for('static', filename='amiya.png') }}"/>
+            <img id="musicImg" style="cursor:pointer;" onClick="play()" alt="user" src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
         <div align="center" >
 
