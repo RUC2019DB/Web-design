@@ -106,9 +106,12 @@
         
             <div align="center"  role="listitem" aria-posinset="2" aria-setsize="50">
                 <table  width="850" border="1">   
-                <a class="is-c" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                    <td style="width: 180px;"><img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
-                     </td>
+                <a class="is-c" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150">
+                    {% if '/' in item['gpic'] %}
+                        <td style="width: 180px;"><img src="{{item['gpic']}}"  width="150" height="150"></td>
+                    {% else %}
+                        <td style="width: 180px;"><img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="150" height="150"></td>
+                    {% endif %}
                 </a>
                 <a class="is-right" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
                     <td style="width: 500px;">

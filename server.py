@@ -17,9 +17,18 @@ serverIP= socket.gethostbyname(hostname)
 @app.route('/',methods=['GET','POST'])
 def home():
     search_Form = searchForm()
-    randomItems = db.randomItems(5)
+    randomItems = db.randomItems(10)
+    if (request.method == "POST")&(search_Form.validate_on_submit()):
+        searchKeyWord = request.form.get("searchKeyWord")
+        return redirect(url_for("searchResult",searchKeyWord=searchKeyWord))
     return render_template('home.html',usertype=session.get('usertype'),username=session.get('username'),
                            search_Form=search_Form,randomItems=randomItems)
+
+
+@app.route("/searchResult/?<string:searchKeyWord>",methods=["GET","POST"])
+def searchResult(searchKeyWord):
+    result = db.searchItems(searchKeyWord)
+    return render_template("searchResult.html",username=session.get('username'),result=result)
 
 
 @app.route("/signIn",methods=["GET","POST"])
@@ -193,21 +202,6 @@ def charge():
         return render_template("charge.html",charge_form=charge_form)
 
 
-@app.route("/searchResult/?<string:searchKeyWord>",methods=["GET","POST"])
-def searchResult(searchKeyWord):
-    result = db.searchItems(searchKeyWord)
-    return render_template("searchResult.html",username=session.get('username'),result=result)
-
-
-@app.route("/search",methods=["GET","POST"])
-def search():
-    search_Form = searchForm()
-    if (request.method == "POST")&(search_Form.validate_on_submit()):
-        searchKeyWord = request.form.get("searchKeyWord")
-        return redirect(url_for("searchResult",searchKeyWord=searchKeyWord))
-    return render_template('home.html',username=session.get('username'),search_Form=search_Form)
-
-
 @app.route("/item/?<int:gno>",methods=["GET","POST"])
 def item(gno):
     item = db.getItem(gno)
@@ -269,6 +263,8 @@ def add2cart(gno):
             else:
                 if db.add2cart(username,gno,num)==False:
                     flash("加入购物车的数量不能超过库存数")
+                else:
+                    return "添加成功!"
     return redirect(url_for('item',gno=gno))
 
 
@@ -346,7 +342,7 @@ def unSubscribe(stno):
         return redirect( url_for('mySubscribe') )
 
 if __name__ == '__main__':
-    db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='Chinese')#数据库
+    db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='China')#数据库
     if db.ifconn:
         print("数据库连接成功")
         app.run(host=serverIP,port='5000')

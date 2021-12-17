@@ -86,7 +86,11 @@
                     <div class="inner">
                         <h2>{{ item['gname'] }}</h2>
                         <div class="inner">
-                            <img align="center" src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+                            {% if '/' in item['gpic'] %}
+                                <img align="center" src="{{item['gpic']}}"  width="215" height="215">
+                            {% else %}
+                                <img align="center" src="{{ url_for('static', filename=item['gpic'] ) }}"  width="215" height="215">
+                            {% endif %}
                         </div>
                         <p class="info">
                             <span class="marks hotsale-hide"></span>

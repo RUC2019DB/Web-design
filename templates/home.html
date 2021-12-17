@@ -5,7 +5,7 @@
             function play() 
             {
                 var audio = document.getElementById('music');
-                audio.volume = 0.1
+                audio.volume = 0.5
                 if (audio.paused) 
                 {
                     audio.play();
@@ -57,7 +57,7 @@
             }
         </style>
         <style type="text/css">
-            .img1{ position: fixed; top: 225px; right:-5px}
+            .img1{ position: fixed; top: 225px; right:-100px}
         </style>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/waifu.css') }}">
     </head>
@@ -79,7 +79,7 @@
         <script src="{{ url_for('static',filename='assets/live2d.js') }}"></script>
         <script type="text/javascript">initModel("static/assets/")</script>
 
-        <audio id="music" src="{{ url_for('static',filename='Happiness Breeze.mp3') }}" loop autoplay></audio>
+        <audio id="music" src="{{ url_for('static',filename='amiya voice.wav') }}"></audio>
 
         <h1 align="center">商店</h1><p id='greeting' align="center"></p>
         <hr>
@@ -117,7 +117,7 @@
         <hr>
        
         <div style="display:inline;position:relative">
-            <form method="post" action="{{ url_for('search') }}">
+            <form method="post">
                 {{search_Form.csrf_token()}}
                 {{search_Form.searchKeyWord.label}}{{search_Form.searchKeyWord}}{{search_Form.submit}}
             </form>
@@ -153,7 +153,7 @@
             <img id="musicImg" style="cursor:pointer;" onClick="play()" alt="user" src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
         <div align="center" >
-
+            {% if randomItems %}
                 {% for item in randomItems %}
               
                     <div>
@@ -161,9 +161,12 @@
                           
                             <a style="width: 180px;" href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
                                    
-                                  <table  width="850" border="1">   
-                                    <td style="width: 180px;"><img src="{{ url_for('static', filename=item['gpic']) }}"  width="115" height="115"></td>
-                                    
+                                  <table  width="850" border="1">
+                                    {% if '/' in item['gpic'] %}
+                                        <td style="width: 180px;"><img src="{{item['gpic']}}"  width="115" height="115"></td>
+                                    {% else %}
+                                        <td style="width: 180px;"><img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="115" height="115"></td>
+                                    {% endif %}
                                 <td style="width: 500px;"><h3>{{ item['gname'] }}</h3></td>
                                 <td>
                                 <p style="font-size:20px" class="info">
@@ -176,7 +179,7 @@
                         </div>
                     </div> 
                 {% endfor %}
-              
+            {% endif %}
               </div>
     </body>
 </html> 

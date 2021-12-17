@@ -13,8 +13,13 @@
                 <p style="font-size:20px;">{{store}}</p>
                 {% for item in items %}
                     <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-                        <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215"  >
-                            <img src="{{ url_for('static', filename=item['gpic']) }}"  width="215" height="215">
+                        <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215">
+                            {% if '/' in item['gpic'] %}
+                                <img src="{{item['gpic']}}"  width="215" height="215">
+                            {% else %}
+                                <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="215" height="215">
+                            {% endif %}
+                            
                             <p>{{ item['gname'] }}<p>
                         </a>
                         <p class="info">

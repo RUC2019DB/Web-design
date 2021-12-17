@@ -68,11 +68,16 @@
             {% for item in orders %}
                 <div  align="center" role="listitem" aria-posinset="2" aria-setsize="50">
                     <table  width="850" border="1"> 
-                        <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                            <td><img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
+                        <a href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                            <td>
+                                {% if '/' in item['gpic'] %}
+                                    <img src="{{item['gpic']}}"  width="150" height="150">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="150" height="150">
+                                {% endif %}
                             </td>
-                            </a>
-                        <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                        </a>
+                        <a href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
                     
                             <td><span style="font-size:30px;width: 5px;" class="inner">{{ item['gname'] }}</span>
                            </td>
@@ -86,7 +91,9 @@
                             <span style="font-size:30px"  class="price"><em>数量:</em>{{item['gquantity']}}</span>
                             </td>
                         </p>
-                    
+                        <td>
+                            下单时间: {{item['orderdate']}}<br>
+                        <td>
                         {% if gstate=='待收货' %}
                         <td>
                             <a href="{{ url_for('comfirmReceipt',orderno=item['orderno'],gno=item['gno']) }}">
@@ -100,6 +107,11 @@
                                 <button style="font-size:20px;width:100px;height:60px">评价</button>
                             </a>
                         </td>
+                        {% endif %}
+                        {% if item["ascomment"] %}
+                            <td style="font-size:30px">
+                                评价时间: {{item["asdate"]}} <br> 评分: {{item["asscore"]}} <br> 评价: {{item["ascomment"]}}<br>
+                            </td>
                         {% endif %}
                 </table>
                 </div>

@@ -69,10 +69,11 @@
                    <table  width="850" border="1">   
                     <td>
                     <a  href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                        
-                        <img src="{{ url_for('static', filename=item['gpic']) }}"  width="150" height="150">
-                        
-                      
+                        {% if '/' in item['gpic'] %}
+                            <img src="{{item['gpic']}}"  width="150" height="150">
+                        {% else %}
+                            <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="150" height="150">
+                        {% endif %}
                     </a>
                     </td>
                     <td>
