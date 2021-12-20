@@ -110,6 +110,10 @@
             <a id="charge" href="{{ url_for('charge') }}">
                 <button>氪!</button>
             </a>
+            <br>
+            <a id="statistic" href="{{ url_for('statistic',flag=0) }}">
+                <button>数据服务</button>
+            </a>
         </div>
         <br>
         <br>
@@ -129,22 +133,22 @@
             <ul class="service-bd" role="menubar">
             
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-                <i aria-hidden="true" >武器</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人武器</a><span class="service-slash">/</span>
-                    <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">决战兵器</a><span class="service-slash">/</span>
-                    <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                <i aria-hidden="true" >服装</i>
+                    <a href="{{ url_for('searchResult',searchKeyWord='男装',orderby='None',reverse='F') }}">男装</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='女装',orderby='None',reverse='F') }}">女装</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='儿童',orderby='None',reverse='F') }}">儿童</a>
                 </li>
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-                <i aria-hidden="true" >防具</i>
-                    <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >单人防具</a><span class="service-slash">/</span>
-                    <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">群体防御</a><span class="service-slash">/</span>
-                    <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                <i aria-hidden="true">生活</i>
+                    <a href="{{ url_for('searchResult',searchKeyWord='食品',orderby='None',reverse='F') }}">食品</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='医药',orderby='None',reverse='F') }}">医药</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='生鲜',orderby='None',reverse='F') }}">生鲜</a>
                 </li> 
                 <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
-                <i aria-hidden="true" >药品及食物</i>
-                        <a href="https://huodong.taobao.com/wow/a/act/tao/dailyact/4634/wupr?wh_pid=dailyAct-257518" >医疗用品</a><span class="service-slash">/</span>
-                        <a href="https://s.taobao.com/search?q=内衣" data-cid="1" data-dataid="222890">野战食品</a><span class="service-slash">/</span>
-                        <a href="https://s.taobao.com/search?q=家居" data-cid="1" data-dataid="222889">其它</a>
+                <i aria-hidden="true" >数码</i>
+                    <a href="{{ url_for('searchResult',searchKeyWord='手机',orderby='None',reverse='F') }}">手机</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='电脑',orderby='None',reverse='F') }}">电脑</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='相机',orderby='None',reverse='F') }}">相机</a>
                 </li>
             </ul>
         </div>

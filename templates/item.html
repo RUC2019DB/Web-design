@@ -70,14 +70,14 @@
         </style>
     </head>
     <body>
-        <a align="center" href="{{ url_for('searchResult',searchKeyWord=item['stname']) }}">
+        <a align="center" href="{{ url_for('searchResult',searchKeyWord=item['stname'],orderby='None',reverse='F') }}">
             <h1>{{item['stname']}}</h1>
         </a>
         <a href="{{ url_for('home') }}">
-            <button style="font-size:30px;width:100px;height:60px">主页</button>
+            <button style="font-size:20px;width:100px;height:60px">主页</button>
         </a>
         <a href="{{ url_for('subscribe',stno=item['stno']) }}">
-            <button style="font-size:20px;width:100px;height:60px">关注该商家</button>
+            <button style="font-size:20px;width:100px;height:60px">关注商家</button>
         </a>
         <div class="bg-white">
             <div class="center-in-center inner">
@@ -100,11 +100,14 @@
                             <span style="font-size:20px;" class="price"><em>销量:</em>{{item['sale']}}</span>
                         </p>
                     </div>
-                    <form action="{{ url_for('add2cart',gno=item['gno']) }}" method="post">
+                    <form style="z-index: 1;" action="{{ url_for('add2cart',gno=item['gno']) }}" method="post">
                         <label style="font-size:20px;" for='itemsale'>购买:</label>
                         <input style="font-size:20px;"  type='text' id='num' name='num' onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"><br>
                         <input style="font-size:20px;" type='submit' value='添加至购物车'>
                     </form>
+                    {% for message in get_flashed_messages() %}
+                    {{ message }}
+                    {% endfor %}
                 </div>
             </div>
             <div class='center-in-r  is-right'>
@@ -125,9 +128,7 @@
         <div class="img1" >
             <img src="{{ url_for('static', filename='amiya.png') }}"/>
         </div>
-         {% for message in get_flashed_messages() %}
-                    {{ message }}
-                {% endfor %}
+        
     </body>
 
 </html>

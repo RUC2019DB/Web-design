@@ -5,42 +5,74 @@
     </head>
     <body>
         <h1 align="center">购物车</h1>
+        <div style="position:fixed;float:left;display:inline">
         <a href="{{ url_for('home') }}">
-            <button style="font-size:30px;width:100px;height:60px">主页</button>
+            <button style="font-size:20px;width:100px;height:60px">主页</button>
         </a>
-        {% if cart %}
-            {% for store,items in cart.items() %}
-                <p style="font-size:20px;">{{store}}</p>
-                {% for item in items %}
-                    <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
-                        <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215">
-                            {% if '/' in item['gpic'] %}
-                                <img src="{{item['gpic']}}"  width="215" height="215">
-                            {% else %}
-                                <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="215" height="215">
-                            {% endif %}
-                            
-                            <p>{{ item['gname'] }}<p>
-                        </a>
-                        <p class="info">
-                            <span class="marks hotsale-hide"></span>
-                            <span class="price"><em>单价:¥</em>{{item['gprice']}}</span>
-                            <span class="quantity"><em>  购买数量:</em>{{item['gquantity']}}</span>
-                        </p>
-                        <form action="{{ url_for('deleteFromCart',gno=item['gno']) }}" method="POST">
-                            <input type='submit' value='删除'>
-                        </form>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% endif %}
         
+        {% if cart %}
+            <form action="{{ url_for('addAll2Order') }}" method="POST">
+                <input style="font-size:20px;width:100px;height:60px" type='submit' value='全选'>
+            </form>
+            <form action="{{ url_for('delAllFromOrder') }}" method="POST">
+                <input style="font-size:20px;width:100px;height:60px" type='submit' value='取消全选'>
+            </form>
+            <a href="{{ url_for('pay') }}">
+                <button style="font-size:20px;width:100px;height:60px" id="pay">结算</button>
+            </a>
+            
+        </div>
+            <div align="center">
+                {% for store,items in cart.items() %}
+                <table  width="850" border="1"> 
+                    <td style="width: 100px;">
+                    <p style="font-size:20px;">{{store}}</p>
+                </td>
+
+                
+                    {% for item in items %}
+                    <td >
+                        <div class="item" role="listitem" aria-posinset="2" aria-setsize="50">
+                            <a href="{{ url_for('item',gno=item['gno']) }}" width="215" height="215">
+                                {% if '/' in item['gpic'] %}
+                                    <img src="{{item['gpic']}}"  width="215" height="215">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="215" height="215">
+                                {% endif %}
+                                
+                                <p>{{ item['gname'] }}<p>
+                            </a>
+                            <p class="info">
+                                <span class="marks hotsale-hide"></span>
+                                <span class="price"><em>单价:¥</em>{{item['gprice']}}</span>
+                                <span class="quantity"><em>  购买数量:</em>{{item['gquantity']}}</span>
+                            </p>
+                            {% if item['selected']==0 %}
+                                <form action="{{ url_for('add2Order',gno=item['gno']) }}" method="POST">
+                                    <input type='submit' value='选中'>
+                                </form>
+                            {% else %}
+                                <form action="{{ url_for('delFromOrder',gno=item['gno']) }}" method="POST">
+                                    <input type='submit' value='取消选中'>
+                                </form>
+                            {% endif %}
+                            <form action="{{ url_for('deleteFromCart',gno=item['gno']) }}" method="POST">
+                                <input type='submit' value='删除'>
+                            </form>
+                        </div>
+                    </td>
+                    {% endfor %}
+                
+                {% endfor %}
+            </div> 
+        {% endif %}
+
+           
+       
         {% for message in get_flashed_messages() %}
             {{ message }}
         {% endfor %}
         <br>
-        <a href="{{ url_for('pay') }}">
-            <button id="pay">结算</button>
-        </a>
+
     </body>
 </html>

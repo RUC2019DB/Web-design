@@ -1,6 +1,7 @@
 # coding=utf-8
 from flask import Flask,render_template,request,flash,redirect,session
 from flask.helpers import url_for
+import matplotlib.pyplot as plt
 from dbQuery import *
 from Form import *
 import socket
@@ -20,15 +21,16 @@ def home():
     randomItems = db.randomItems(10)
     if (request.method == "POST")&(search_Form.validate_on_submit()):
         searchKeyWord = request.form.get("searchKeyWord")
-        return redirect(url_for("searchResult",searchKeyWord=searchKeyWord))
+        return redirect(url_for("searchResult",searchKeyWord=searchKeyWord,orderby='None',reverse='F'))
     return render_template('home.html',usertype=session.get('usertype'),username=session.get('username'),
                            search_Form=search_Form,randomItems=randomItems)
 
 
-@app.route("/searchResult/?<string:searchKeyWord>",methods=["GET","POST"])
-def searchResult(searchKeyWord):
-    result = db.searchItems(searchKeyWord)
-    return render_template("searchResult.html",username=session.get('username'),result=result)
+@app.route("/searchResult/?<string:searchKeyWord>/?<string:orderby>/?<string:reverse>",methods=["GET","POST"])
+def searchResult(searchKeyWord,orderby,reverse):
+    result = db.searchItems(searchKeyWord,orderby,reverse)
+    return render_template("searchResult.html", username=session.get('username'),
+                            result=result, searchKeyWord=searchKeyWord)
 
 
 @app.route("/signIn",methods=["GET","POST"])
@@ -268,6 +270,14 @@ def add2cart(gno):
     return redirect(url_for('item',gno=gno))
 
 
+@app.route("/deleteFromCart/?<int:gno>",methods=["GET","POST"])
+def deleteFromCart(gno):
+    if request.method=="POST":
+        username = session.get("username")
+        db.deleteFromCart(username,gno)
+    return redirect(url_for('shoppingCart'))
+
+
 @app.route("/shoppingCart",methods=["GET","POST"])
 def shoppingCart():
     cart = None
@@ -276,15 +286,38 @@ def shoppingCart():
     if usertype!="VIP":
         return "请登录VIP账户"
     else:
-        cart = db.checkCart(username)
+        cart = db.checkCart(username,0)
         return render_template("shoppingCart.html",cart=cart)
 
-
-@app.route("/deleteFromCart/?<int:gno>",methods=["GET","POST"])
-def deleteFromCart(gno):
+@app.route("/add2Order/?<int:gno>",methods=["GET","POST"])
+def add2Order(gno):
     if request.method=="POST":
         username = session.get("username")
-        db.deleteFromCart(username,gno)
+        db.add2Order(username,gno)
+    return redirect(url_for('shoppingCart'))
+
+
+@app.route("/addAll2Order",methods=["GET","POST"])
+def addAll2Order():
+    if request.method=="POST":
+        username = session.get("username")
+        db.addAll2Order(username)
+    return redirect(url_for('shoppingCart'))
+
+
+@app.route("/delAllFromOrder",methods=["GET","POST"])
+def delAllFromOrder():
+    if request.method=="POST":
+        username = session.get("username")
+        db.delAllFromOrder(username)
+    return redirect(url_for('shoppingCart'))
+
+
+@app.route("/delFromOrder/?<int:gno>",methods=["GET","POST"])
+def delFromOrder(gno):
+    if request.method=="POST":
+        username = session.get("username")
+        db.delFromOrder(username,gno)
     return redirect(url_for('shoppingCart'))
 
 
@@ -297,7 +330,7 @@ def pay():
     if usertype!="VIP":
         flash("请登录VIP账户")
     else:
-        cart = db.checkCart(username)
+        cart = db.checkCart(username,1)
         for items in cart.values():
             for item in items:
                 allPrice += item["gprice"] * item["gquantity"]
@@ -340,6 +373,28 @@ def unSubscribe(stno):
     else:
         db.unSubscribe(username,stno)
         return redirect( url_for('mySubscribe') )
+
+
+@app.route("/statistic",methods=["GET","POST"])
+def statistic():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        return "请登录VIP账户"
+    else:
+        data = {"北京":1,"上海":2,"广东":3,"深圳":4}
+        return render_template("statistic.html", data=data)
+
+
+@app.route("/vipHistory",methods=["GET","POST"])
+def vipHistory():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!="VIP":
+        return "请登录VIP账户"
+    else:
+        return render_template("vipHistory.html")
+
 
 if __name__ == '__main__':
     db = dbQuery(dbIP='127.0.0.1',dbusername='sa',dbpassword='123456',dbname='China')#数据库

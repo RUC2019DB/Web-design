@@ -1,7 +1,5 @@
 <html>
     <head>
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-        <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
         <style>
             body 
             {
@@ -13,7 +11,6 @@
             }
            
         </style>
-        
         <style type="text/css">   
      
             *{   
@@ -37,8 +34,8 @@
                                         }
             .center-in-center{   
                 position: absolute;   
-                top: 50%;   
-                left: 20%;   
+                top: 40%;   
+                left: 30%;   
                 -webkit-transform: translate(-50%, -50%);   
                 -moz-transform: translate(-50%, -50%);   
                 -ms-transform: translate(-50%, -50%);   
@@ -59,38 +56,47 @@
                 width: auto;
                 margin-right: 10px;
             }
-            .topButton
-            {
-                z-index:1;
-
-            }
-        </style>   
-        <style type="text/css">
-            .img1{ position: fixed; top: 200px; left:-130px}
-        </style>
+            
+        </style>  
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/echarts.min.js') }}"></script>
     </head>
     <body>
-        <h1 align="center">我的关注</h1>
-        <div align="center">
-            
-            {% if subscribeList %}
-                {% for store in subscribeList %}
-                <table  width="550" border="1"> 
-                <td style="width: 350px;">
-                    <a href="{{ url_for('searchResult',searchKeyWord=store['stname'],orderby='None',reverse='F') }}">
-                        <h1>{{ store['stname'] }}</h1>
-                    </a></td>
-                    <td style="width: 150px;">
-                    <a href="{{ url_for('unSubscribe',stno=store['stno']) }}">
-                        <button style="font-size:20px;width:100px;height:60px">取消关注</button>
-                    </a></td>
-                    <br>
-                {% endfor %}
-            {% endif %}
-            {% for message in get_flashed_messages() %}
-                {{ message }}
+        <h1 align="center">数据服务</h1>
+        <div id="main" style="width: 600px;height:400px;"></div>
+        <script>
+            var xdata = []
+            var ydata = []
+            {% for key,values in data.items() %}
+                xdata.push( '{{key}}' )
+                ydata.push( {{data[key]}} )
             {% endfor %}
-        </div>
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main'));
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: 'ECharts 入门示例'
+                },
+                tooltip: {},
+                legend: {
+                    data:['销量']
+                },
+                xAxis: {
+                    data: xdata
+                },
+                yAxis: {},
+                series: [{
+                    name: '销量',
+                    type: 'bar',
+                    data: ydata
+                }]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        </script>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
     </body>
-
 </html>

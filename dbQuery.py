@@ -2,7 +2,6 @@
 import hashlib
 import pymssql
 from werkzeug.utils import secure_filename
-from Form import searchForm
 import time
 
 class dbQuery():
@@ -160,7 +159,7 @@ class dbQuery():
     def vipViewOrders(self,username,gstate):
         cursor = self.conn.cursor(as_dict=True)
         vipno = self.__getvipno(username)
-        sql = ("select * from ruc.orders o,ruc.goods g where o.gno=g.gno and vipno=%d and gstate='%s' order by orderdate"
+        sql = ("select * from ruc.orders o,ruc.goods g where o.gno=g.gno and vipno=%d and gstate='%s' order by orderdate desc"
                 %(vipno,gstate))
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -170,6 +169,7 @@ class dbQuery():
             result[i]["gname"] = self.__toZH(result[i]["gname"])
             if result[i]["ascomment"]!=None:
                 result[i]["ascomment"] = self.__toZH(result[i]["ascomment"])
+        result = sorted(result,key=lambda x:x["orderdate"])
         return result
 
 
@@ -177,10 +177,10 @@ class dbQuery():
         cursor = self.conn.cursor(as_dict=True)
         stno = self.__getstno(username)
         if gstate=='待发货':
-            sql = ("select * from ruc.orders o,ruc.goods g,ruc.vip v where o.vipno=v.vipno and o.gno=g.gno and stno=%d and gstate='待发货' order by orderdate"
+            sql = ("select * from ruc.orders o,ruc.goods g,ruc.vip v where o.vipno=v.vipno and o.gno=g.gno and stno=%d and gstate='待发货' order by orderdate desc"
                     %(stno))
         else:
-            sql = ("select * from ruc.orders o,ruc.goods g,ruc.vip v where o.vipno=v.vipno and o.gno=g.gno and stno=%d and gstate<>'待发货' order by orderdate"
+            sql = ("select * from ruc.orders o,ruc.goods g,ruc.vip v where o.vipno=v.vipno and o.gno=g.gno and stno=%d and gstate<>'待发货' order by orderdate desc"
                     %(stno))
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -191,6 +191,7 @@ class dbQuery():
             result[i]["gname"] = self.__toZH(result[i]["gname"])
             if result[i]["ascomment"] != None:
                 result[i]["ascomment"] = self.__toZH(result[i]["ascomment"])
+        result = sorted(result,key=lambda x:x["orderdate"])
         return result
     
 
@@ -278,8 +279,25 @@ class dbQuery():
             result[i]["gpic"] = self.__toZH(result[i]["gpic"])
         return result
 
+    def getAvgScore(self,gno):
+        cursor = self.conn.cursor(as_dict=True)
+        sql = "select avg(asscore) avgscore from ruc.orders where gno=%d and asscore is not NULL"%(gno)
+        cursor.execute(sql)
+        avgscore = cursor.fetchone()["avgscore"]
+        if avgscore == None: avgscore = '无'
+        return avgscore
 
-    def searchItems(self,searchKeyWord):#搜索商品
+    
+    def getSale(self,gno):
+        cursor = self.conn.cursor(as_dict=True)
+        sql = "select sum(gquantity) sale from ruc.orders where gno=%d"%(gno)
+        cursor.execute(sql)
+        sale = cursor.fetchone()["sale"]
+        if sale == None: sale = 0
+        return sale
+
+
+    def searchItems(self,searchKeyWord,orderby,reverse):#搜索商品
         cursor = self.conn.cursor(as_dict=True)
         sql = ("select * from ruc.goods g,ruc.store s where g.stno=s.stno and (gname like \'"+'%'+"%s"%(searchKeyWord)+"%\'" + 
                 " or gclass like \'"+'%'+"%s"%(searchKeyWord)+"%\'" + " or stname like \'"+'%'+"%s"%(searchKeyWord)+"%\')")
@@ -292,6 +310,20 @@ class dbQuery():
             searchResult[i]["gname"] = self.__toZH(searchResult[i]["gname"])
             searchResult[i]["gclass"] = self.__toZH(searchResult[i]["gclass"])
             searchResult[i]["gpic"] = self.__toZH(searchResult[i]["gpic"])
+            searchResult[i]["avgscore"] = self.getAvgScore(searchResult[i]["gno"])
+            if searchResult[i]["avgscore"]=='无':
+                searchResult[i]["avgscore"] = 0
+            searchResult[i]["sale"] = self.getSale(searchResult[i]["gno"])
+        if reverse=='F':
+            reverse = False
+        else:
+            reverse = True
+        if orderby=='avgscore':
+            searchResult = sorted(searchResult,key=lambda x:x["avgscore"],reverse=reverse)
+        elif orderby=='sale':
+            searchResult = sorted(searchResult,key=lambda x:x["sale"],reverse=reverse)
+        elif orderby=='price':
+            searchResult = sorted(searchResult,key=lambda x:x["gprice"],reverse=reverse)
         return searchResult
 
 
@@ -308,15 +340,9 @@ class dbQuery():
         itemInfo["gpic"] = self.__toZH(itemInfo["gpic"])
         itemInfo["stname"] = self.__toZH(itemInfo["stname"])
         #均分
-        sql = "select avg(asscore) avgscore from ruc.orders where gno=%d and asscore is not NULL"%(gno)
-        cursor.execute(sql)
-        itemInfo["avgscore"] = cursor.fetchone()["avgscore"]
-        if itemInfo["avgscore"] == None: itemInfo["avgscore"] = '无'
+        itemInfo["avgscore"] = self.getAvgScore(gno)
         #销量
-        sql = "select sum(gquantity) sale from ruc.orders where gno=%d"%(gno)
-        cursor.execute(sql)
-        itemInfo["sale"] = cursor.fetchone()["sale"]
-        if itemInfo["sale"] == None: itemInfo["sale"] = 0
+        itemInfo["sale"] = self.getSale(gno)
         return itemInfo
 
 
@@ -372,7 +398,7 @@ class dbQuery():
             if num>storage:#加入购物车的数量不能超过库存数
                 return False
             else:
-                sql = "insert into ruc.cart values(%d,%d,%d)"%(gno,vipno,num)
+                sql = "insert into ruc.cart values(%d,%d,%d,0)"%(gno,vipno,num)
         try:
             cursor.execute(sql)
         except:
@@ -388,10 +414,40 @@ class dbQuery():
         cursor.execute(sql)
 
     
-    def checkCart(self,username):#查看购物车
+    def add2Order(self,username,gno):
         cursor = self.conn.cursor(as_dict=True)
         vipno = self.__getvipno(username)
-        sql = "select gname,g.gno,gclass,gprice,s.stno,gstorage,gpic,vipno,gquantity,stname from ruc.goods g, ruc.cart c, ruc.store s where g.gno=c.gno and g.stno=s.stno and vipno=%d"%(vipno)
+        sql = "update ruc.cart set selected=1 where vipno=%d and gno=%d"%(vipno,gno)
+        cursor.execute(sql)
+
+
+    def addAll2Order(self,username):
+        cursor = self.conn.cursor(as_dict=True)
+        vipno = self.__getvipno(username)
+        sql = "update ruc.cart set selected=1 where vipno=%d"%(vipno)
+        cursor.execute(sql)    
+
+
+    def delFromOrder(self,username,gno):
+        cursor = self.conn.cursor(as_dict=True)
+        vipno = self.__getvipno(username)
+        sql = "update ruc.cart set selected=0 where vipno=%d and gno=%d"%(vipno,gno)
+        cursor.execute(sql)
+
+
+    def delAllFromOrder(self,username):
+        cursor = self.conn.cursor(as_dict=True)
+        vipno = self.__getvipno(username)
+        sql = "update ruc.cart set selected=0 where vipno=%d"%(vipno)
+        cursor.execute(sql)
+
+    
+    def checkCart(self,username,selected):#查看购物车
+        cursor = self.conn.cursor(as_dict=True)
+        vipno = self.__getvipno(username)
+        sql = "select gname,g.gno,gclass,gprice,s.stno,gstorage,gpic,vipno,gquantity,stname,selected from ruc.goods g, ruc.cart c, ruc.store s where g.gno=c.gno and g.stno=s.stno and vipno=%d"%(vipno)
+        if selected == 1:
+            sql = sql + ' and c.selected=1'
         cursor.execute(sql)
         result = cursor.fetchall()
         groupResult = {}
@@ -408,19 +464,19 @@ class dbQuery():
 
     def generateOrder(self,username):#生成订单
         cursor = self.conn.cursor(as_dict=True)
-        cart = self.checkCart(username)
+        cart = self.checkCart(username,1)
+        vipno = self.__getvipno(username)
         cost = 0
         for items in cart.values():
             for item in items:
                 cost += item["gquantity"] * item["gprice"]
                 if item["gquantity"]>item["gstorage"]:
                     return "库存量不足"
-        sql = "update ruc.vip set vipmoney=vipmoney-%d where vipname='%s'"%(cost,username)
+        sql = "update ruc.vip set vipmoney=vipmoney-%d where vipno=%d"%(cost,vipno)
         try:
             cursor.execute(sql)
         except:
             return "您的余额不足"
-        vipno = self.__getvipno(username)
         ordertime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         sql = "select orderno from ruc.orders group by orderno"
         cursor.execute(sql)
@@ -435,8 +491,8 @@ class dbQuery():
                 #更新goods表中的库存量
                 sql = "update ruc.goods set gstorage=gstorage-%d where gno=%d"%(item["gquantity"],item["gno"])
                 cursor.execute(sql)
-        #删除购物车中的商品
-        sql = "delete from ruc.cart where vipno=%d"%(vipno)
+        #删除购物车中选中的商品
+        sql = "delete from ruc.cart where vipno=%d and selected=1"%(vipno)
         cursor.execute(sql)
         return "购买成功"
 
@@ -470,3 +526,4 @@ class dbQuery():
             cursor.execute(sql)
         except:
             pass
+

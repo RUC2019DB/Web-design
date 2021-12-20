@@ -47,8 +47,8 @@
             }   
             .center-in-r{   
                 position: absolute;   
-                top: 30%;   
-                left: 70%;   
+                top: 5%;   
+                left: 10%;   
                 -webkit-transform: translate(-50%, -50%);   
                 -moz-transform: translate(-50%, -50%);   
                 -ms-transform: translate(-50%, -50%);   
@@ -70,9 +70,10 @@
         </style>
     </head>
     <body>
-        <a href="{{ url_for('home') }}">
-            <button style="font-size:30px;width:100px;height:60px">主页</button>
-        </a>
+        <div  class="center-in-r">
+        <a   href="{{ url_for('home') }}">
+            <button align="center" style="left:50%;font-size:30px;width:100px;height:60px">主页</button>
+        </a></div>
         <div class="center-in-center">
             <div>
                 <h1>我的个人信息</h1><br>
@@ -93,20 +94,23 @@
             <h1>我的订单</h1>
             <div>
                 <a  id="vipRegister" href="{{ url_for('vipViewOrders',gstate='待发货') }}">
-                    <button style="font-size:30px;width:100px;height:60px">待发货</button>
+                    <button style="font-size:20px;width:100px;height:60px">待发货</button>
                 </a>
                 <a  id="storeRegister" href="{{ url_for('vipViewOrders',gstate='待收货') }}">
-                    <button style="font-size:30px;width:100px;height:60px">待收货</button>
+                    <button style="font-size:20px;width:100px;height:60px">待收货</button>
                 </a>
                 <a  id="vipPage" href="{{ url_for('vipViewOrders',gstate='待评价') }}">
-                    <button style="font-size:30px;width:100px;height:60px">待评价</button>
+                    <button style="font-size:20px;width:100px;height:60px">待评价</button>
                 </a>
                 <a  id="storePage" href="{{ url_for('vipViewOrders',gstate='已完成') }}">
-                    <button style="font-size:30px;width:100px;height:60px">已完成</button>
+                    <button style="font-size:20px;width:100px;height:60px">已完成</button>
                 </a>
             </div>
             <a id="mySubscribe" href="{{ url_for('mySubscribe') }}">
-                <button style="font-size:30px;width:100px;height:60px">我的关注</button>
+                <button style="font-size:20px;width:100px;height:60px">我的关注</button>
+            </a>
+            <a id="vipHistory" href="{{ url_for('vipHistory') }}">
+                <button style="font-size:20px;width:100px;height:60px">消费历史</button>
             </a>
             {% for message in get_flashed_messages() %}
                 {{ message }}

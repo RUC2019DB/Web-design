@@ -60,55 +60,38 @@
         </style>  
     </head>
     <body>
-        <h1 align="center">{{gstate}}</h1>
+        <h1 align="center">我的消费历史</h1>
         <a href="{{ url_for('home') }}">
             <button style="font-size:30px;width:100px;height:60px">主页</button>
         </a>
-        <div align="center" >
+        <div align="center">
+            {% if orders %}
             {% for item in orders %}
-                
-                <div align="center" role="listitem" aria-posinset="2" aria-setsize="50">
-                    <table  width="1500" border="1"> 
-                        <td style="width: 180px;"> <p style="font-size:30px;display: inline;">买家:{{item["vipname"]}}</p></td> 
-                        <td style="width: 200px;"> 
-                            <a class="is-c" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150">
+                <div  align="center" role="listitem" aria-posinset="2" aria-setsize="50">
+                    <table  width="850" border="1"> 
+                        <a href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                            <td>
                                 {% if '/' in item['gpic'] %}
                                     <img src="{{item['gpic']}}"  width="150" height="150">
                                 {% else %}
                                     <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="150" height="150">
                                 {% endif %}
-                            </a>
-                        </td>
-                        <td style="width: 300px;"> <a class="is-right" href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                    
-                            <span  style="font-size:30px;width: 5px;" class="inner">{{ item['gname'] }}</span>
-                        </a></td>
-                        <td style="width: 180px;">  
-                            <p class="info">
-                                <span style="font-size:30px" class="marks hotsale-hide"></span>
-                                <span style="font-size:30px" class="price"><em>¥ {{item['gprice']}}</em></span>
-                                <br>
-                                <br>
-                                <span style="font-size:30px" class="price"><em>数量:{{item['gquantity']}}</em></span>
-                            </p>
-                        </td>
-                        {% if item["ascomment"] %}
-                            <td style="font-size:30px">
-                                评价时间: {{item["asdate"]}} <br> 评分: {{item["asscore"]}} <br> 评价: {{item["ascomment"]}}<br>
                             </td>
-                        {% endif %}
-                        <td>
-                            <span style="font-size:30px;width: 5px;" class="inner">下单时间: {{item['orderdate']}}</span>
-                            <br>
-                            {% if gstate=='待发货' %}
-                                <a href="{{ url_for('deliver',orderno=item['orderno'],gno=item['gno']) }}">
-                                    <button style="font-size:20px;width:100px;height:60px">发货</button>
-                                </a>
-                            {% endif %}
-                        </td>
+                        </a>
+                        <a href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                    
+                            <td><span style="font-size:30px;width: 5px;" class="inner">{{ item['gname'] }}</span>
+                           </td>
+                        </a>
+                        <p class="info">
+                            <td style="width: 180px;">
+                                <span style="font-size:30px"  class="price"><em>数量:</em>{{item['gquantity']}}</span>
+                            </td>
+                        </p>
                     </table>
                 </div>
             {% endfor %}
+            {% endif %}
         </div>
     </body>
 </html>

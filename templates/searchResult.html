@@ -58,35 +58,72 @@
         </style>  
     </head>
     <body>
+        <div align="center">
+        <h1 >{{searchKeyWord}}</h1>
         <a href="{{ url_for('home') }}">
-            <button style="font-size:30px;width:100px;height:60px">主页</button>
+            <button style="font-size:20px;width:100px;height:60px">主页</button>
+        </a></div>
+        <br>
+        <div  style="position:fixed;float:left;display:inline">
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='avgscore',reverse='F') }}">
+            <button style="font-size:20px;width:100px;height:60px">按评分升序</button>
         </a>
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='sale',reverse='F') }}">
+            <button style="font-size:20px;width:100px;height:60px">按销量升序</button>
+        </a>
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='price',reverse='F') }}">
+            <button style="font-size:20px;width:100px;height:60px">按价格升序</button>
+        </a>
+        <br>
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='avgscore',reverse='T') }}">
+            <button style="font-size:20px;width:100px;height:60px">按评分降序</button>
+        </a>
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='sale',reverse='T') }}">
+            <button style="font-size:20px;width:100px;height:60px">按销量降序</button>
+        </a>
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='price',reverse='T') }}">
+            <button style="font-size:20px;width:100px;height:60px">按价格降序</button>
+        </a></div>
         <div align="center" >
             
-            {% for item in result%}
+            {% for item in result %}
                 
                 <div >
                    <table  width="850" border="1">   
-                    <td>
-                    <a  href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                        {% if '/' in item['gpic'] %}
-                            <img src="{{item['gpic']}}"  width="150" height="150">
-                        {% else %}
-                            <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="150" height="150">
-                        {% endif %}
-                    </a>
-                    </td>
-                    <td>
-                    <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                
-                        <span style="font-size:15px;width: 20px;" class="inner">{{ item['gname'] }}</span>
-                    </a></td>
-                    <td>
-                    <p style="font-size:20px" class="info">
-                        <span class="marks hotsale-hide"></span>
-                        <span class="price"><em>¥ </em>{{item['gprice']}}</span>
-                    </p></td>
-                </table>
+                        <td style="width: 100px;">
+                            <a  href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                                {% if '/' in item['gpic'] %}
+                                    <img src="{{item['gpic']}}"  width="150" height="150">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename=item['gpic'] ) }}"  width="150" height="150">
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td style="width: 200px;">
+                            <a   href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                        
+                                <span style="font-size:15px;width: 20px;" class="inner">{{ item['gname'] }}</span>
+                            </a>
+                        </td>
+                        <td style="width: 200px;">
+                            <p style="font-size:20px" class="info">
+                                <span class="marks hotsale-hide"></span>
+                                <span class="price"><em>¥ </em>{{item['gprice']}}</span>
+                            </p>
+                        </td>
+                        <td style="width: 100px;">
+                            <p style="font-size:20px" class="info">
+                                <span class="marks hotsale-hide"></span>
+                                <span style="font-size:20px;" class="avgscore"><em>评分:</em>{{item['avgscore']}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p style="font-size:20px" class="info">
+                                <span class="marks hotsale-hide"></span>
+                                <span style="font-size:20px;" class="sale"><em>销量:</em>{{item['sale']}}</span>
+                            </p>
+                        </td>
+                    </table>
                    
                 </div>
             {% endfor %}
