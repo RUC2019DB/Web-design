@@ -1,0 +1,243 @@
+<html>
+    <head>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
+        <style type="text/css">   
+     
+            *{   
+                margin: 0;   
+                padding: 0; 
+            }  
+            
+            .bg-white {
+                background: #fff;
+            } 
+            .inner{
+                     width:50%
+                    }
+            .inner-title {
+                    padding-left: .25rem;
+                    padding-right: .25rem;
+                    padding-top: .625rem;
+                    padding-bottom: .625rem;
+                    float: left; 
+                    font-size: 0.75rem;
+                                        }
+            .center-in-center{   
+                position: absolute;   
+                top: 40%;   
+                left: 30%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .center-in-r{   
+                position: absolute;   
+                top: 30%;   
+                left: 70%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            }   
+            .is-right {
+                width: auto;
+                margin-right: 10px;
+            }
+            
+        </style>  
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/echarts.min.js') }}"></script>
+    </head>
+    <body>
+        <h1 align="center">{{ storeInfo['stname'] }}</h1>
+        <div class="center-in-c" id="main" style="width: 1280px;height:720px;"></div>
+        <script>
+            let xdata = []
+            let ydata = []
+            {% for data in yearsProfits %}
+                xdata.push( {{data['years']}} )
+                ydata.push( {{data['profits']}} )
+            {% endfor %}
+            // 基于准备好的dom，初始化echarts实例
+            let myChart = echarts.init(document.getElementById('main'));
+            // 指定图表的配置项和数据
+            let option = {
+                title: {
+                    text: '年销售额',
+                    x:'center',
+                    textStyle: {
+                    fontSize: 30
+                    }      
+                },
+                tooltip: {},
+                legend: {
+                    data:['年销售额'],
+                    textStyle: {
+                    //图例字体大小
+                    fontSize: 30
+                    },
+                    //图例大小
+                    itemHeight: 30,
+                    //图例滚动显示
+                    right: 140,
+                    top: 30,
+                    bottom: 30,
+                },
+                xAxis: {
+                    data: xdata,
+                    axisLabel:{
+                    fontSize:30,
+                }
+                },
+                yAxis: {
+                        axisLabel:{
+                        fontSize:30
+                    }
+                },
+                series: [{
+                    name: '年销售额',
+                    type: 'bar',
+                    data: ydata,
+                    label:{
+                        show:true,
+                        position:'top',
+                        textStyle: {
+                        fontSize: 20
+                    },
+                    }
+                }]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        </script>
+
+        <div class="center-in-c" id="main2" style="width: 1280px;height:720px;"></div>
+        <script>
+            let xdata2 = []
+            let ydata2 = []
+            {% for data in monthsProfits %}
+                xdata2.push( {{data['months']}} )
+                ydata2.push( {{data['profits']}} )
+            {% endfor %}
+            // 基于准备好的dom，初始化echarts实例
+            let myChart2 = echarts.init(document.getElementById('main2'));
+            // 指定图表的配置项和数据
+            let option2 = {
+                title: {
+                    text: '今年月销售额',
+                    x:'center',
+                    textStyle: {
+                    fontSize: 30
+                    }      
+                },
+                tooltip: {},
+                legend: {
+                    data:['月销售额'],
+                    textStyle: {
+                    //图例字体大小
+                    fontSize: 30
+                    },
+                    //图例大小
+                    itemHeight: 30,
+                    //图例滚动显示
+                    right: 140,
+                    top: 30,
+                    bottom: 30,
+                },
+                xAxis: {
+                    data: xdata2,
+                    axisLabel:{
+                    fontSize:30,
+                }
+                },
+                yAxis: {
+                        axisLabel:{
+                        fontSize:30
+                    }
+                },
+                series: [{
+                    name: '月销售额',
+                    type: 'line',
+                    data: ydata2,
+                    label:{
+                        show:true,
+                        position:'top',
+                        textStyle: {
+                        fontSize: 20
+                    },
+                    }
+                }]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart2.setOption(option2);
+        </script>
+
+        <div class="center-in-c" id="main3" style="width: 1280px;height:720px;"></div>
+        <script>
+            let pieData = []
+            {% for data in provincesProfits %}
+                pieData.push( {value:{{data['profits']}}, name:"{{data['province']}}"} )
+            {% endfor %}
+            // 基于准备好的dom，初始化echarts实例
+            let myChart3 = echarts.init(document.getElementById('main3'));
+            // 指定图表的配置项和数据
+            let option3 = {
+                title: {
+                    text: '各省份销售额占比',
+                    x:'center',
+                    textStyle: {
+                        fontSize: 30
+                    }      
+                },
+                legend: {  
+                    orient : 'vertical',  
+                    x : 'left',  
+                    top:40,
+                    itemWidth:50,
+                    itemHeight:20,
+                    formatter: '{name}',
+                    textStyle:{
+                        fontSize: 20
+                    }
+                },
+                series : [
+                    {
+                        name: '各省份销售额占比',
+                        type: 'pie',
+                        radius: ['35%', '65%'],
+                        data:pieData,
+                        label:{            //饼图图形上的文本标签
+                            normal:{
+                                show:true,
+                                position:'outer', //标签的位置
+                                textStyle : {
+                                    fontWeight : 300 ,
+                                    fontSize : 25    //文字的字体大小
+                                },
+                                formatter:'{d}%'
+                            }
+                        }
+                    }
+                ]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart3.setOption(option3);
+        </script>
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
+    </body>
+</html>

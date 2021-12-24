@@ -159,9 +159,23 @@ def storePage():
     if usertype!='商家':
         return "请登录商家账户"
     else:
-        storeInfo, profits = db.storeInfo(username)
+        storeInfo = db.storeInfo(username)
         items = db.storeViewItems(username)
-        return render_template("store.html",storeInfo=storeInfo,items=items,profits=profits)
+        return render_template("store.html",storeInfo=storeInfo,items=items)
+
+
+@app.route("/storeProfits",methods=["GET","POST"])
+def storeProfits():
+    usertype = session.get("usertype")
+    username = session.get("username")
+    if usertype!='商家':
+        return "请登录商家账户"
+    else:
+        storeInfo = db.storeInfo(username)
+        yearsProfits, monthsProfits, provincesProfits = db.storeProfits(username)
+        return render_template("storeProfits.html",storeInfo=storeInfo,
+                                yearsProfits=yearsProfits, monthsProfits=monthsProfits,
+                                provincesProfits=provincesProfits)
 
 
 @app.route("/storeViewOrders/?<string:gstate>",methods=["GET","POST"])
@@ -379,8 +393,8 @@ def unSubscribe(stno):
 def statistic():
     usertype = session.get("usertype")
     username = session.get("username")
-    if usertype!="VIP":
-        return "请登录VIP账户"
+    if usertype == None:
+        return "请登录账户"
     else:
         data = db.statistic()
         return render_template("statistic.html", data=data)

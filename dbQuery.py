@@ -3,6 +3,7 @@ import hashlib
 import pymssql
 from werkzeug.utils import secure_filename
 import time
+import datetime
 
 class dbQuery():
     def __init__(self,dbIP,dbusername,dbpassword,dbname):
@@ -95,18 +96,49 @@ class dbQuery():
 
     def storeInfo(self,username):
         cursor = self.conn.cursor(as_dict=True)
-        stno = self.__getstno(username)
         sql = "select stname,staddress from ruc.store where stname='%s'"%(username)
         cursor.execute(sql)
         storeInfo = cursor.fetchone()
-        sql = ("select YEAR(orderdate) years,sum(o.gprice*o.gquantity) profits from ruc.orders o,ruc.goods g where o.gno=g.gno and stno=%d group by YEAR(orderdate)"
-                %(stno))
-        cursor.execute(sql)
-        profits = cursor.fetchall()
-        profits = sorted(profits,key=lambda x:x["years"],reverse=False)
         storeInfo["stname"] = self.__toZH(storeInfo["stname"])
         storeInfo["staddress"] = self.__toZH(storeInfo["staddress"])
-        return storeInfo, profits
+        return storeInfo
+
+
+    def storeProfits(self,username):
+        cursor = self.conn.cursor(as_dict=True)
+        stno = self.__getstno(username)
+        #年销售额
+        sql = ("select YEAR(orderdate) years,sum(o.gprice*o.gquantity) profits from ruc.orders o,ruc.goods g where o.gno=g.gno and stno=%d group by YEAR(orderdate)"
+                        %(stno))
+        cursor.execute(sql)
+        yearsProfits = cursor.fetchall()
+        yearsProfits = sorted(yearsProfits,key=lambda x:x["years"],reverse=False)
+
+        #月销售额
+        thisYear = datetime.datetime.now().year
+        sql = ("select MONTH(orderdate) months,sum(o.gprice*o.gquantity) profits from ruc.orders o,ruc.goods g where o.gno=g.gno and stno=%d and YEAR(orderdate)=%d group by MONTH(orderdate)"
+                        %(stno,thisYear))
+        cursor.execute(sql)
+        monthsProfits = cursor.fetchall()
+        for i in range(12):
+            flag = False
+            for j in range(len(monthsProfits)):
+                if monthsProfits[j]["months"] == i+1:
+                    flag = True
+                    break
+            if flag == False:
+                monthsProfits.append({'months':i+1,'profits':0})
+        monthsProfits = sorted(monthsProfits,key=lambda x:x["months"],reverse=False)
+
+        #各省份销售额
+        sql = ("select province,sum(o.gprice*o.gquantity) profits from ruc.orders o,ruc.goods g,ruc.vip v where o.gno=g.gno and v.vipno=o.vipno and stno=%d group by province"
+                %(stno))
+        cursor.execute(sql)
+        provincesProfits = cursor.fetchall()
+        provincesProfits = sorted(provincesProfits,key=lambda x:x["province"])
+        for i in range(len(provincesProfits)):
+            provincesProfits[i]["province"] = self.__toZH(provincesProfits[i]["province"])
+        return yearsProfits, monthsProfits, provincesProfits
 
     
     def storeViewItems(self,username):

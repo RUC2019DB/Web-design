@@ -62,7 +62,6 @@
         <script src="{{ url_for('static', filename='js/echarts.min.js') }}"></script>
     </head>
     <body>
-        <h1 align="center">数据服务</h1>
         <div id="main" style="width: 1920px;height:1080px;"></div>
         <script>
             var xdata = []
@@ -80,20 +79,42 @@
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '省份统计数据'
+                    text: '各省份会员消费数据(全站)',
+                    x:'center',
+                    textStyle: {
+                    fontSize: 30
+                    }
                 },
                 tooltip: {},
                 legend: {
-                    data:['最小消费额','最大消费额','平均消费额']
+                    data:['最小消费额','最大消费额','平均消费额'],
+                    textStyle: {
+                    //图例字体大小
+                    fontSize: 30
+                    },
+                    //图例大小
+                    itemHeight: 30,
+                    //图例滚动显示
+                    type: 'scroll',
+                    //图例纵向显示
+                    orient: 'vertical',
+                    right: 140,
+                    top: 30,
+                    bottom: 30,
                 },
                 xAxis: {
                     data: xdata,
                     axisLabel:{
                         interval:0,
-                        rotate:40
+                        rotate:30,
+                        fontSize:15,
                     }
                 },
-                yAxis: {},
+                yAxis: {
+                    axisLabel:{
+                        fontSize:20
+                    }
+                },
                 series: [{
                     name: '最小消费额',
                     type: 'bar',
