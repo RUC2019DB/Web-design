@@ -85,9 +85,17 @@
                 <p style="display: inline;font-size:30px;">手机号码:{{vipInfo["vipphone"]}}</p><br>
                 <p style="display: inline;font-size:30px;">余额:{{vipInfo["vipmoney"]}}</p><br>
             </div>
-            <a href="{{ url_for('updateInfo') }}">
-                <button style="font-size:20px;width:100px;height:60px" id="signIn">修改个人信息</button>
-            </a>
+            <div>
+                <a href="{{ url_for('updateInfo') }}">
+                    <button style="font-size:20px;width:100px;height:60px" id="signIn">修改信息</button>
+                </a>
+                <a id="mySubscribe" href="{{ url_for('mySubscribe') }}">
+                    <button style="font-size:20px;width:100px;height:60px">我的关注</button>
+                </a>
+                <a id="vipHistory" href="{{ url_for('vipHistory') }}">
+                    <button style="font-size:20px;width:100px;height:60px">消费历史</button>
+                </a>
+            </div>
             <br>
             <br>
             <br>
@@ -106,12 +114,6 @@
                     <button style="font-size:20px;width:100px;height:60px">已完成</button>
                 </a>
             </div>
-            <a id="mySubscribe" href="{{ url_for('mySubscribe') }}">
-                <button style="font-size:20px;width:100px;height:60px">我的关注</button>
-            </a>
-            <a id="vipHistory" href="{{ url_for('vipHistory') }}">
-                <button style="font-size:20px;width:100px;height:60px">消费历史</button>
-            </a>
             {% for message in get_flashed_messages() %}
                 {{ message }}
             {% endfor %}

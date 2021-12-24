@@ -2,6 +2,17 @@
     <head>
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
         <style type="text/css">   
      
             *{   
@@ -65,12 +76,12 @@
             <button style="font-size:30px;width:100px;height:60px">主页</button>
         </a>
         <div align="center">
-            {% if orders %}
-            {% for item in orders %}
+            {% if myFaItems %}
+            {% for item in myFaItems %}
                 <div  align="center" role="listitem" aria-posinset="2" aria-setsize="50">
                     <table  width="850" border="1"> 
-                        <a href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
-                            <td>
+                        <a href="{{ url_for('item',gno=item['gno']) }}">
+                            <td style="width: 200px;">
                                 {% if '/' in item['gpic'] %}
                                     <img src="{{item['gpic']}}"  width="150" height="150">
                                 {% else %}
@@ -78,14 +89,14 @@
                                 {% endif %}
                             </td>
                         </a>
-                        <a href="{{ url_for('item',gno=item['gno']) }}" width="150" height="150"  >
+                        <a href="{{ url_for('item',gno=item['gno']) }}">
                     
-                            <td><span style="font-size:30px;width: 5px;" class="inner">{{ item['gname'] }}</span>
+                            <td style="width: 200px;"><span style="font-size:30px;width: 5px;" class="inner">{{ item['gname'] }}</span>
                            </td>
                         </a>
                         <p class="info">
                             <td style="width: 180px;">
-                                <span style="font-size:30px"  class="price"><em>数量:</em>{{item['gquantity']}}</span>
+                                <span style="font-size:30px"  class="price"><em>购买数量:</em>{{item['total']}}</span>
                             </td>
                         </p>
                     </table>

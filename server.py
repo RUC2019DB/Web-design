@@ -159,9 +159,9 @@ def storePage():
     if usertype!='商家':
         return "请登录商家账户"
     else:
-        storeInfo = db.storeInfo(username)
+        storeInfo, profits = db.storeInfo(username)
         items = db.storeViewItems(username)
-        return render_template("store.html",storeInfo=storeInfo,items=items)
+        return render_template("store.html",storeInfo=storeInfo,items=items,profits=profits)
 
 
 @app.route("/storeViewOrders/?<string:gstate>",methods=["GET","POST"])
@@ -382,7 +382,7 @@ def statistic():
     if usertype!="VIP":
         return "请登录VIP账户"
     else:
-        data = {"北京":1,"上海":2,"广东":3,"深圳":4}
+        data = db.statistic()
         return render_template("statistic.html", data=data)
 
 
@@ -393,7 +393,8 @@ def vipHistory():
     if usertype!="VIP":
         return "请登录VIP账户"
     else:
-        return render_template("vipHistory.html")
+        myFaItems = db.myFavoriteItems(username)
+        return render_template("vipHistory.html",myFaItems=myFaItems)
 
 
 if __name__ == '__main__':

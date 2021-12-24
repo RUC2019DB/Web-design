@@ -107,10 +107,10 @@
             <a id="shoppingCart" href="{{ url_for('shoppingCart') }}">
                 <button>购物车</button>
             </a>
+            <br>
             <a id="charge" href="{{ url_for('charge') }}">
                 <button>氪!</button>
             </a>
-            <br>
             <a id="statistic" href="{{ url_for('statistic',flag=0) }}">
                 <button>数据服务</button>
             </a>
@@ -149,6 +149,24 @@
                     <a href="{{ url_for('searchResult',searchKeyWord='手机',orderby='None',reverse='F') }}">手机</a><span class="service-slash">/</span>
                     <a href="{{ url_for('searchResult',searchKeyWord='电脑',orderby='None',reverse='F') }}">电脑</a><span class="service-slash">/</span>
                     <a href="{{ url_for('searchResult',searchKeyWord='相机',orderby='None',reverse='F') }}">相机</a>
+                </li>
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >文艺</i>
+                    <a href="{{ url_for('searchResult',searchKeyWord='书籍',orderby='None',reverse='F') }}">书籍</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='美术',orderby='None',reverse='F') }}">美术</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='音乐',orderby='None',reverse='F') }}">音乐</a>
+                </li>
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >玩具</i>
+                    <a href="{{ url_for('searchResult',searchKeyWord='乐高',orderby='None',reverse='F') }}">乐高</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='高达',orderby='None',reverse='F') }}">高达</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='遥控',orderby='None',reverse='F') }}">遥控</a>
+                </li>
+                <li data-closeper="" aria-label="查看更多" role="menuitem" aria-haspopup="true" data-groupid="0" >
+                <i aria-hidden="true" >游戏</i>
+                    <a href="{{ url_for('searchResult',searchKeyWord='明日方舟',orderby='None',reverse='F') }}">明日方舟</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='CSGO',orderby='None',reverse='F') }}">CSGO</a><span class="service-slash">/</span>
+                    <a href="{{ url_for('searchResult',searchKeyWord='Steam',orderby='None',reverse='F') }}">Steam</a>
                 </li>
             </ul>
         </div>

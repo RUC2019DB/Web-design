@@ -99,17 +99,14 @@ class dbQuery():
         sql = "select stname,staddress from ruc.store where stname='%s'"%(username)
         cursor.execute(sql)
         storeInfo = cursor.fetchone()
-        sql = ("select sum(o.gprice*o.gquantity) profits from ruc.orders o,ruc.goods g where o.gno=g.gno and stno=%d and gstate='已完成'"
+        sql = ("select YEAR(orderdate) years,sum(o.gprice*o.gquantity) profits from ruc.orders o,ruc.goods g where o.gno=g.gno and stno=%d group by YEAR(orderdate)"
                 %(stno))
         cursor.execute(sql)
-        profits = cursor.fetchone()["profits"]
-        if profits==None:
-            storeInfo["profits"] = 0
-        else:
-            storeInfo["profits"] = profits
+        profits = cursor.fetchall()
+        profits = sorted(profits,key=lambda x:x["years"],reverse=False)
         storeInfo["stname"] = self.__toZH(storeInfo["stname"])
         storeInfo["staddress"] = self.__toZH(storeInfo["staddress"])
-        return storeInfo
+        return storeInfo, profits
 
     
     def storeViewItems(self,username):
@@ -318,12 +315,8 @@ class dbQuery():
             reverse = False
         else:
             reverse = True
-        if orderby=='avgscore':
-            searchResult = sorted(searchResult,key=lambda x:x["avgscore"],reverse=reverse)
-        elif orderby=='sale':
-            searchResult = sorted(searchResult,key=lambda x:x["sale"],reverse=reverse)
-        elif orderby=='price':
-            searchResult = sorted(searchResult,key=lambda x:x["gprice"],reverse=reverse)
+        if orderby!='None':
+            searchResult = sorted(searchResult,key=lambda x:x[orderby],reverse=reverse)
         return searchResult
 
 
@@ -526,4 +519,31 @@ class dbQuery():
             cursor.execute(sql)
         except:
             pass
+    
+    def myFavoriteItems(self,username):
+        cursor = self.conn.cursor(as_dict=True)
+        vipno = self.__getvipno(username)
+        sql = "select g.gpic,g.gno,g.gname,g.gpic,sum(o.gquantity) total from ruc.orders o,ruc.goods g where vipno=%d and o.gno=g.gno group by g.gno,g.gname,g.gpic order by total desc"%(vipno)
+        try:
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for i in range(len(result)):
+                result[i]["gname"] = self.__toZH(result[i]["gname"])
+                result[i]["gpic"] = self.__toZH(result[i]["gpic"])
+        except:
+            return False
+        else:
+            return result
+
+    
+    def statistic(self):
+        cursor = self.conn.cursor(as_dict=True)
+        sql = "select province,max(消费额) 最大消费额,min(消费额) 最小消费额,avg(消费额) 平均消费额 from dbo.orders_province_vipno group by province order by 平均消费额 desc"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        for i in range(len(result)):
+            result[i]["province"] = self.__toZH(result[i]["province"])
+        return result
+
+
 

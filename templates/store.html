@@ -5,6 +5,7 @@
 
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/echarts.min.js') }}"></script>
         <style>
             body 
             {
@@ -48,6 +49,16 @@
                 -o-transform: translate(-50%, -50%);   
                 transform: translate(-50%, -50%);   
             }   
+            .center-in-c{   
+                position: absolute;   
+                top: 100%;   
+                left: 50%;   
+                -webkit-transform: translate(-50%, -50%);   
+                -moz-transform: translate(-50%, -50%);   
+                -ms-transform: translate(-50%, -50%);   
+                -o-transform: translate(-50%, -50%);   
+                transform: translate(-50%, -50%);   
+            } 
             .center-in-r{   
                 position: absolute;   
                 top: 20%;   
@@ -89,8 +100,8 @@
             <h1>店铺信息</h1><br>
             <p style="display: inline;font-size:30px;">店铺名:{{storeInfo["stname"]}}</p><br>
             <p style="display: inline;font-size:30px;">地址:{{storeInfo["staddress"]}}</p><br>
-            <p style="display: inline;font-size:30px;">我的营业额:{{storeInfo["profits"]}}</p><br>
         </div>
+        
         <div class='center-in-r'>
         <h1>收到的订单</h1>
         
@@ -131,6 +142,41 @@
                 </a>
                  </td> 
             </div>
+
+
+            <div class="center-in-c" id="main" style="width: 600px;height:300px;">
+                <script>
+                    var xdata = []
+                    var ydata = []
+                    {% for data in profits %}
+                        xdata.push( {{data['years']}} )
+                        ydata.push( {{data['profits']}} )
+                    {% endfor %}
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main'));
+                    // 指定图表的配置项和数据
+                    var option = {
+                        title: {
+                            text: '年销售额'
+                        },
+                        tooltip: {},
+                        legend: {
+                            data:['年销售额']
+                        },
+                        xAxis: {
+                            data: xdata
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '销量',
+                            type: 'bar',
+                            data: ydata
+                        }]
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                </script>
+                </div>
         {% endfor %}
         {% for message in get_flashed_messages() %}
             {{ message }}

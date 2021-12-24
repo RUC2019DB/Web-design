@@ -2,6 +2,17 @@
     <head>
         <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static',filename='js/back_reload.js') }}"></script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
     </head>
     <body>
         <h1 align="center">购物车</h1>

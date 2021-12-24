@@ -1,6 +1,17 @@
 <html>
     <head>
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <style>
+            body 
+            {
+                background-image:url("{{ url_for('static', filename='p.jpg') }}");
+                background-repeat:no-repeat;
+                background-position:center top;
+                background-attachment: fixed;
+                background-size:cover ;
+            }
+           
+        </style>
         <style type="text/css">   
      
             *{   
@@ -71,7 +82,7 @@
         <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='sale',reverse='F') }}">
             <button style="font-size:20px;width:100px;height:60px">按销量升序</button>
         </a>
-        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='price',reverse='F') }}">
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='gprice',reverse='F') }}">
             <button style="font-size:20px;width:100px;height:60px">按价格升序</button>
         </a>
         <br>
@@ -81,7 +92,7 @@
         <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='sale',reverse='T') }}">
             <button style="font-size:20px;width:100px;height:60px">按销量降序</button>
         </a>
-        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='price',reverse='T') }}">
+        <a href="{{ url_for('searchResult',searchKeyWord=searchKeyWord,orderby='gprice',reverse='T') }}">
             <button style="font-size:20px;width:100px;height:60px">按价格降序</button>
         </a></div>
         <div align="center" >

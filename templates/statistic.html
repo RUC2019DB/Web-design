@@ -63,33 +63,63 @@
     </head>
     <body>
         <h1 align="center">数据服务</h1>
-        <div id="main" style="width: 600px;height:400px;"></div>
+        <div id="main" style="width: 1920px;height:1080px;"></div>
         <script>
             var xdata = []
-            var ydata = []
-            {% for key,values in data.items() %}
-                xdata.push( '{{key}}' )
-                ydata.push( {{data[key]}} )
+            var mindata = []
+            var maxdata = []
+            var avgdata = []
+            {% for p in data %}
+                xdata.push( '{{p['province']}}' )
+                mindata.push( Math.round({{p['最小消费额']}}) )
+                maxdata.push( Math.round({{p['最大消费额']}}) )
+                avgdata.push( Math.round({{p['平均消费额']}}) )
             {% endfor %}
             // 基于准备好的dom，初始化echarts实例
             var myChart = echarts.init(document.getElementById('main'));
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: 'ECharts 入门示例'
+                    text: '省份统计数据'
                 },
                 tooltip: {},
                 legend: {
-                    data:['销量']
+                    data:['最小消费额','最大消费额','平均消费额']
                 },
                 xAxis: {
-                    data: xdata
+                    data: xdata,
+                    axisLabel:{
+                        interval:0,
+                        rotate:40
+                    }
                 },
                 yAxis: {},
                 series: [{
-                    name: '销量',
+                    name: '最小消费额',
                     type: 'bar',
-                    data: ydata
+                    data: mindata,
+                    label:{
+                        show:true,
+                        position:'top'
+                    }
+                },
+                {
+                    name: '最大消费额',
+                    type: 'bar',
+                    data: maxdata,
+                    label:{
+                        show:true,
+                        position:'top'
+                    }
+                },
+                {
+                    name: '平均消费额',
+                    type: 'bar',
+                    data: avgdata,
+                    label:{
+                        show:true,
+                        position:'top'
+                    }
                 }]
             };
             // 使用刚指定的配置项和数据显示图表。
