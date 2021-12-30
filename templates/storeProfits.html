@@ -63,7 +63,11 @@
     </head>
     <body>
         <h1 align="center">{{ storeInfo['stname'] }}</h1>
-        <div class="center-in-c" id="main" style="width: 1280px;height:720px;"></div>
+        <div style="display:inline;">
+            <div class="center-in-c" id="main" style="width: 1280px;height:720px;display:inline;"></div>
+            <div class="center-in-c" id="main2" style="width: 1280px;height:720px;display:inline;"></div>
+            <div class="center-in-c" id="main3" style="width: 1280px;height:720px;display:inline;"></div>
+        </div>
         <script>
             let xdata = []
             let ydata = []
@@ -124,7 +128,7 @@
             myChart.setOption(option);
         </script>
 
-        <div class="center-in-c" id="main2" style="width: 1280px;height:720px;"></div>
+        
         <script>
             let xdata2 = []
             let ydata2 = []
@@ -184,8 +188,6 @@
             // 使用刚指定的配置项和数据显示图表。
             myChart2.setOption(option2);
         </script>
-
-        <div class="center-in-c" id="main3" style="width: 1280px;height:720px;"></div>
         <script>
             let pieData = []
             {% for data in provincesProfits %}

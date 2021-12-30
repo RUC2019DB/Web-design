@@ -224,7 +224,7 @@ class dbQuery():
         return result
     
 
-    def comfirmReceipt(self,username,orderno,gno):
+    def comfirmReceipt(self,username,orderno,gno):#加入username的验证，防止构造url来干扰交易
         cursor = self.conn.cursor(as_dict=True)
         vipno = self.__getvipno(username)
         sql = "update ruc.orders set gstate='待评价' where orderno=%d and gno=%d and vipno=%d"%(orderno,gno,vipno)
@@ -233,10 +233,13 @@ class dbQuery():
         except:
             return False
         else:
-            return True
+            if cursor.rowcount > 0:
+                return True
+            else:
+                return False
 
 
-    def deliver(self,username,orderno,gno):
+    def deliver(self,username,orderno,gno):#加入username的验证，防止构造url来干扰交易
         cursor = self.conn.cursor(as_dict=True)
         stno = self.__getstno(username)
         sql = ("update ruc.orders set gstate='待收货' where orderno=%d and gno=%d and gno in (select gno from ruc.goods where stno=%d)"
@@ -246,7 +249,10 @@ class dbQuery():
         except:
             return False
         else:
-            return True
+            if cursor.rowcount > 0:
+                return True
+            else:
+                return False
     
 
     def giveComment(self,orderno,gno,score,comment):
